@@ -1,0 +1,1616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#050a16">
+<title>Samvidhan Quest — The Constitution Challenge</title>
+<meta name="description" content="An interactive story game that teaches Indian constitutional rights, duties and democratic principles through realistic decisions.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Tiro+Devanagari+Hindi&family=Mukta:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy-950:#050a16;
+  --navy-900:#080f21;
+  --navy-800:#0d1730;
+  --navy-700:#142243;
+  --surface:#101c38;
+  --surface-2:#16274a;
+  --saffron:#ff9f2e;
+  --saffron-soft:#ffc46b;
+  --saffron-dim:rgba(255,159,46,.14);
+  --emerald:#12c47f;
+  --emerald-soft:#6ee7b7;
+  --emerald-dim:rgba(18,196,127,.14);
+  --gold:#e6c15a;
+  --gold-dim:rgba(230,193,90,.14);
+  --text:#eaf1ff;
+  --text-dim:#9aacce;
+  --text-faint:#8598bd;
+  --border:rgba(255,255,255,.09);
+  --border-strong:rgba(255,255,255,.17);
+  --danger:#ff6b6b;
+  --danger-dim:rgba(255,107,107,.12);
+  --radius:18px;
+  --radius-sm:12px;
+  --shadow:0 24px 60px -28px rgba(0,0,0,.85);
+  --font-display:'Bricolage Grotesque','Tiro Devanagari Hindi',system-ui,sans-serif;
+  --font-body:'Plus Jakarta Sans','Mukta',system-ui,sans-serif;
+  --font-mono:'JetBrains Mono',ui-monospace,monospace;
+  --maxw:1080px;
+}
+body.lang-hi{
+  --font-display:'Tiro Devanagari Hindi','Bricolage Grotesque',serif;
+  --font-body:'Mukta','Plus Jakarta Sans',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{
+  font-family:var(--font-body);
+  color:var(--text);
+  background:
+    radial-gradient(1100px 620px at 12% -12%, rgba(255,159,46,.11), transparent 62%),
+    radial-gradient(1000px 700px at 112% 6%, rgba(18,196,127,.11), transparent 60%),
+    linear-gradient(180deg,var(--navy-950) 0%, var(--navy-900) 42%, var(--navy-950) 100%);
+  background-attachment:fixed;
+  min-height:100dvh;
+  line-height:1.6;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.35;
+  background-image:linear-gradient(rgba(255,255,255,.028) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(255,255,255,.028) 1px,transparent 1px);
+  background-size:56px 56px;
+  mask-image:radial-gradient(circle at 50% 0%,#000 0%,transparent 78%);
+  -webkit-mask-image:radial-gradient(circle at 50% 0%,#000 0%,transparent 78%);
+}
+.wrap{position:relative;z-index:1;max-width:var(--maxw);margin:0 auto;padding:0 20px}
+.screen{display:none;min-height:100dvh;padding:32px 0 72px}
+.screen.active{display:block;animation:screenIn .5s cubic-bezier(.2,.7,.3,1) both}
+@keyframes screenIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+/* ---------- typography ---------- */
+h1,h2,h3,h4{font-family:var(--font-display);font-weight:800;line-height:1.14;letter-spacing:-.015em}
+.mono{font-family:var(--font-mono);letter-spacing:.14em;text-transform:uppercase;font-size:11px}
+
+/* ---------- landing ---------- */
+.hero{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:calc(100dvh - 110px);text-align:center;padding-top:18px}
+.emblem{width:78px;height:78px;margin-bottom:26px;color:var(--saffron);filter:drop-shadow(0 0 22px rgba(255,159,46,.35));animation:fadeScale .8s .05s both}
+@keyframes fadeScale{from{opacity:0;transform:scale(.7)}to{opacity:1;transform:none}}
+.kicker{color:var(--saffron);margin-bottom:18px;animation:fadeUp .7s .1s both}
+.hero h1{font-size:clamp(2.6rem,8.2vw,5.2rem);letter-spacing:-.03em;animation:fadeUp .8s .16s both}
+.hero h1 .accent{color:var(--saffron)}
+.tagline{margin-top:16px;font-size:clamp(1.02rem,2.4vw,1.32rem);color:var(--text-dim);max-width:34ch;font-weight:500;animation:fadeUp .8s .26s both}
+.tagline strong{color:var(--emerald-soft);font-weight:700}
+.intro{margin-top:10px;color:var(--text-faint);font-size:.92rem;animation:fadeUp .8s .32s both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+
+.panel{background:linear-gradient(165deg,rgba(22,39,74,.9),rgba(13,23,48,.92));border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow)}
+.setup{margin-top:38px;width:100%;max-width:520px;padding:26px 24px;text-align:left;animation:fadeUp .8s .4s both}
+.setup .label{display:block;margin-bottom:10px;color:var(--text-dim);font-weight:600;font-size:.92rem}
+input[type=text]{
+  width:100%;padding:15px 17px;font-family:var(--font-body);font-size:1rem;color:var(--text);
+  background:rgba(5,10,22,.65);border:1px solid var(--border-strong);border-radius:var(--radius-sm);outline:none;transition:.22s}
+input[type=text]::placeholder{color:var(--text-faint)}
+input[type=text]:focus{border-color:var(--saffron);box-shadow:0 0 0 4px var(--saffron-dim)}
+.langrow{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px}
+.langchip{padding:13px 8px;text-align:center;cursor:pointer;font-weight:600;font-size:.9rem;color:var(--text-dim);
+  background:rgba(5,10,22,.5);border:1px solid var(--border);border-radius:var(--radius-sm);transition:.2s;user-select:none}
+.langchip:hover{border-color:var(--border-strong);color:var(--text)}
+.langchip[aria-pressed=true]{border-color:var(--saffron);background:var(--saffron-dim);color:var(--saffron-soft);box-shadow:0 0 0 3px rgba(255,159,46,.08)}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:10px;width:100%;margin-top:22px;
+  padding:17px 26px;font-family:var(--font-display);font-weight:800;font-size:1.06rem;letter-spacing:.02em;
+  color:#100a02;background:linear-gradient(135deg,var(--saffron),#ffb457);border:none;border-radius:var(--radius-sm);
+  cursor:pointer;transition:transform .18s cubic-bezier(.2,.8,.3,1),box-shadow .22s,filter .22s;box-shadow:0 14px 34px -14px rgba(255,159,46,.7)}
+.btn:hover{transform:translateY(-2px);filter:brightness(1.05);box-shadow:0 20px 44px -16px rgba(255,159,46,.8)}
+.btn:active{transform:translateY(0)}
+.btn.ghost{background:transparent;color:var(--text);border:1px solid var(--border-strong);box-shadow:none;font-size:.98rem;padding:14px 22px}
+.btn.ghost:hover{border-color:var(--saffron);color:var(--saffron-soft);background:rgba(255,159,46,.06)}
+.btn.emerald{background:linear-gradient(135deg,var(--emerald),#3ddc9a);color:#032116;box-shadow:0 14px 34px -14px rgba(18,196,127,.7)}
+.btn[disabled]{opacity:.42;cursor:not-allowed;transform:none!important;box-shadow:none}
+.feat{margin-top:34px;display:flex;flex-wrap:wrap;gap:10px;justify-content:center;animation:fadeUp .8s .5s both}
+.feat span{font-size:.76rem;color:var(--text-faint);border:1px solid var(--border);border-radius:99px;padding:7px 14px;background:rgba(255,255,255,.02)}
+.footnote{margin-top:30px;max-width:600px;color:var(--text-faint);font-size:.76rem;line-height:1.65;text-align:center}
+
+/* ---------- top bar ---------- */
+.topbar{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:24px}
+.brand{display:flex;align-items:center;gap:11px;font-family:var(--font-display);font-weight:800;letter-spacing:-.01em;font-size:1.02rem}
+.brand svg{width:26px;height:26px;color:var(--saffron)}
+.spacer{flex:1}
+.minilang{display:flex;gap:6px}
+.minilang button{font-family:var(--font-body);font-size:.74rem;font-weight:600;color:var(--text-faint);background:transparent;border:1px solid var(--border);border-radius:99px;padding:6px 12px;cursor:pointer;transition:.2s}
+.minilang button[aria-pressed=true]{color:var(--saffron-soft);border-color:var(--saffron);background:var(--saffron-dim)}
+
+/* ---------- hud ---------- */
+.hud{display:grid;grid-template-columns:1.6fr 1fr 1fr;gap:12px;margin-bottom:26px}
+.hudcard{padding:16px 18px;border-radius:var(--radius-sm);background:linear-gradient(160deg,rgba(22,39,74,.75),rgba(13,23,48,.8));border:1px solid var(--border)}
+.hudcard .k{color:var(--text-faint);margin-bottom:6px}
+.hudcard .v{font-family:var(--font-display);font-weight:800;font-size:1.5rem;line-height:1.1}
+.hudcard .v small{font-size:.8rem;color:var(--text-faint);font-weight:600}
+.bar{height:8px;border-radius:99px;background:rgba(255,255,255,.08);overflow:hidden;margin-top:10px}
+.bar i{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,var(--saffron),var(--emerald));transition:width .9s cubic-bezier(.2,.8,.3,1)}
+
+/* ---------- mission map ---------- */
+.sectionhead{margin-bottom:18px}
+.sectionhead h2{font-size:clamp(1.5rem,4vw,2.1rem)}
+.sectionhead p{color:var(--text-dim);font-size:.94rem;margin-top:4px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(288px,1fr));gap:16px}
+.mcard{position:relative;padding:22px;border-radius:var(--radius);cursor:pointer;overflow:hidden;
+  background:linear-gradient(160deg,rgba(22,39,74,.82),rgba(11,19,40,.9));border:1px solid var(--border);
+  color:var(--text);transition:transform .24s cubic-bezier(.2,.8,.3,1),border-color .24s,box-shadow .24s;text-align:left}
+.mcard::after{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--accent,var(--saffron));opacity:.85}
+.mcard:hover{transform:translateY(-4px);border-color:var(--border-strong);box-shadow:var(--shadow)}
+.mcard.locked{cursor:not-allowed;filter:saturate(.4);
+  background:linear-gradient(160deg,rgba(16,27,50,.6),rgba(8,14,29,.68));border-color:rgba(255,255,255,.055)}
+.mcard.locked::after{opacity:.38}
+.mcard.locked h3{color:#dde6f8}
+.mcard.locked .sub{color:#a7b6d3}
+.mcard.locked .mnum,.mcard.locked .mstatus{color:#94a5c5}
+.mcard.locked .micon{opacity:.5}
+.mcard.locked:hover{transform:none;box-shadow:none;border-color:rgba(255,255,255,.055)}
+.mcard.done{border-color:rgba(18,196,127,.4)}
+.mtop{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.mnum{font-family:var(--font-mono);font-size:.72rem;letter-spacing:.16em;color:var(--text-faint)}
+.micon{width:42px;height:42px;display:grid;place-items:center;border-radius:12px;color:var(--accent,var(--saffron));
+  background:color-mix(in srgb,var(--accent,var(--saffron)) 14%, transparent);border:1px solid color-mix(in srgb,var(--accent,var(--saffron)) 30%, transparent)}
+.micon svg{width:22px;height:22px}
+.mcard h3{font-size:1.12rem;margin-bottom:6px;color:#ffffff}
+.mcard .sub{color:var(--text-dim);font-size:.85rem;min-height:2.5em}
+.mcard .art{display:inline-block;margin-top:14px;font-family:var(--font-mono);font-size:.66rem;letter-spacing:.08em;
+  color:var(--accent,var(--saffron));border:1px solid color-mix(in srgb,var(--accent,var(--saffron)) 32%, transparent);
+  background:color-mix(in srgb,var(--accent,var(--saffron)) 10%, transparent);border-radius:99px;padding:5px 11px}
+.mstatus{display:flex;align-items:center;gap:7px;margin-top:16px;font-size:.8rem;font-weight:600;color:var(--text-faint)}
+.mstatus .dot{width:7px;height:7px;border-radius:99px;background:currentColor}
+.mstatus.ok{color:var(--emerald)}
+.mstatus.open{color:var(--saffron)}
+.badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.badge{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:99px;font-size:.8rem;font-weight:600;
+  border:1px solid var(--border);background:rgba(255,255,255,.03);color:var(--text-faint)}
+.badge.on{border-color:rgba(230,193,90,.45);background:var(--gold-dim);color:var(--gold);animation:pop .45s cubic-bezier(.2,1.4,.4,1) both}
+@keyframes pop{from{transform:scale(.75);opacity:0}to{transform:scale(1);opacity:1}}
+
+/* ---------- mission ---------- */
+.mhead{margin-bottom:22px}
+.mhead .tag{display:inline-flex;align-items:center;gap:8px;color:var(--accent,var(--saffron));margin-bottom:10px}
+.mhead h2{font-size:clamp(1.55rem,4.6vw,2.5rem)}
+.mhead .art2{margin-top:10px;font-family:var(--font-mono);font-size:.7rem;letter-spacing:.1em;color:var(--text-dim)}
+.card{padding:26px;border-radius:var(--radius);background:linear-gradient(165deg,rgba(22,39,74,.75),rgba(11,19,40,.86));border:1px solid var(--border);box-shadow:var(--shadow)}
+.card+.card{margin-top:18px}
+.lead{font-size:1.06rem;color:#dbe5fb;line-height:1.78}
+.q{font-family:var(--font-display);font-weight:800;font-size:1.18rem;margin:26px 0 16px;color:var(--text)}
+.choices{display:flex;flex-direction:column;gap:12px}
+.choice{display:flex;gap:14px;align-items:flex-start;width:100%;text-align:left;padding:17px 18px;border-radius:var(--radius-sm);
+  background:rgba(5,10,22,.5);border:1px solid var(--border);color:var(--text);font-family:var(--font-body);
+  font-size:.98rem;line-height:1.6;cursor:pointer;transition:transform .18s,border-color .2s,background .2s}
+.choice:hover:not([disabled]){transform:translateX(4px);border-color:var(--saffron);background:rgba(255,159,46,.07)}
+.choice .key{flex:0 0 30px;height:30px;display:grid;place-items:center;border-radius:9px;background:rgba(255,255,255,.07);
+  font-family:var(--font-mono);font-size:.78rem;color:var(--text-dim);transition:.2s}
+.choice:hover:not([disabled]) .key{background:var(--saffron);color:#100a02}
+.choice[disabled]{cursor:default}
+.choice.correct{border-color:var(--emerald);background:var(--emerald-dim);animation:rightIn .5s cubic-bezier(.2,1.2,.4,1) both}
+.choice.correct .key{background:var(--emerald);color:#032116}
+.choice.wrong{border-color:var(--danger);background:var(--danger-dim);animation:shake .45s both}
+.choice.wrong .key{background:var(--danger);color:#2a0505}
+.choice.dim{opacity:.6}
+.choice.dim .key{color:#c8d4ec}
+@keyframes rightIn{0%{transform:scale(1)}45%{transform:scale(1.02)}100%{transform:scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-7px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(3px)}}
+
+.feedback{margin-top:22px;animation:fadeUp .5s both}
+.verdict{display:flex;align-items:center;flex-wrap:wrap;gap:12px;padding:15px 18px;border-radius:var(--radius-sm);font-family:var(--font-display);font-weight:800;font-size:1.05rem}
+.verdict.good{background:var(--emerald-dim);border:1px solid rgba(18,196,127,.4);color:var(--emerald-soft)}
+.verdict.bad{background:var(--danger-dim);border:1px solid rgba(255,107,107,.35);color:#ffb3b3}
+.verdict svg{width:22px;height:22px;flex:0 0 22px}
+.xpfly{display:inline-flex;align-items:center;gap:8px;margin-left:auto;font-family:var(--font-mono);font-size:.82rem;color:var(--gold)}
+.xpfly.bump{animation:pop .5s cubic-bezier(.2,1.5,.4,1) both}
+.blocks{margin-top:18px;display:flex;flex-direction:column;gap:14px}
+.block{padding:16px 18px;border-radius:var(--radius-sm);background:rgba(5,10,22,.42);border:1px solid var(--border)}
+.block h4{font-size:.72rem;font-family:var(--font-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--saffron);margin-bottom:9px;font-weight:600}
+.block.emerald h4{color:var(--emerald-soft)}
+.block.gold h4{color:var(--gold)}
+.block p{color:#cfdbf3;font-size:.95rem;line-height:1.72}
+.pillrow{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.pill{font-size:.78rem;color:var(--text-dim);border:1px solid var(--border);border-radius:99px;padding:5px 12px;background:rgba(255,255,255,.02)}
+ul.src{list-style:none;display:flex;flex-direction:column;gap:7px}
+ul.src li{position:relative;padding-left:16px;color:var(--text-dim);font-size:.84rem;overflow-wrap:break-word}
+ul.src li::before{content:"";position:absolute;left:0;top:.62em;width:6px;height:6px;border-radius:99px;background:var(--saffron);opacity:.8}
+.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px}
+.actions .btn{width:auto;flex:1;min-width:180px;margin-top:0}
+
+/* ---------- mentor ---------- */
+.mentor{margin-top:20px;border-radius:var(--radius);border:1px solid var(--border);background:linear-gradient(165deg,rgba(16,28,56,.7),rgba(9,16,34,.8));overflow:hidden}
+.mentor summary{display:flex;align-items:center;gap:12px;padding:17px 20px;cursor:pointer;list-style:none;font-family:var(--font-display);font-weight:800;font-size:1rem}
+.mentor summary::-webkit-details-marker{display:none}
+.mentor summary .ico{width:32px;height:32px;border-radius:9px;display:grid;place-items:center;background:var(--saffron-dim);color:var(--saffron);flex:0 0 32px}
+.mentor summary .ico svg{width:18px;height:18px}
+.mentor summary .chev{margin-left:auto;color:var(--text-faint);transition:transform .25s}
+.mentor[open] summary .chev{transform:rotate(180deg)}
+.mbody{padding:0 20px 20px;border-top:1px solid var(--border)}
+.mlog{display:flex;flex-direction:column;gap:10px;max-height:290px;overflow-y:auto;padding:16px 0}
+.msg{padding:11px 15px;border-radius:14px;font-size:.92rem;line-height:1.65;max-width:88%}
+.msg.bot{background:rgba(255,159,46,.09);border:1px solid rgba(255,159,46,.22);align-self:flex-start;border-radius:14px 14px 14px 4px}
+.msg.me{background:rgba(18,196,127,.1);border:1px solid rgba(18,196,127,.24);align-self:flex-end;border-radius:14px 14px 4px 14px;color:#d6f5e8}
+.mform{display:flex;gap:10px;margin-top:6px}
+.mform input{flex:1}
+.mform button{flex:0 0 auto;width:auto;margin-top:0;padding:15px 20px;font-size:.94rem}
+
+/* ---------- victory ---------- */
+.victory{text-align:center;padding-top:16px}
+.trophy{width:96px;height:96px;margin:0 auto 20px;color:var(--gold);animation:fadeScale .7s both}
+.victory h2{font-size:clamp(1.7rem,5.4vw,2.9rem);margin-bottom:10px}
+.victory .sub{color:var(--text-dim);font-size:1.02rem}
+.statrow{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin:26px 0}
+.stat{padding:16px 24px;border-radius:var(--radius-sm);border:1px solid var(--border);background:rgba(255,255,255,.03);min-width:130px}
+.stat .k{color:var(--text-faint);margin-bottom:4px}
+.stat .v{font-family:var(--font-display);font-weight:800;font-size:1.4rem}
+
+.certificate{margin:30px auto 0;max-width:760px;text-align:center;padding:clamp(26px,5vw,52px);border-radius:20px;
+  background:linear-gradient(165deg,#fdf8ee,#f6ead2);color:#20180a;position:relative;overflow:hidden;
+  border:1px solid rgba(230,193,90,.7);box-shadow:0 34px 80px -34px rgba(0,0,0,.9)}
+.certificate::before{content:"";position:absolute;inset:12px;border:1.5px solid rgba(160,120,30,.45);border-radius:12px;pointer-events:none}
+.certificate::after{content:"";position:absolute;inset:19px;border:.5px solid rgba(160,120,30,.28);border-radius:9px;pointer-events:none}
+.cert-kicker{font-family:var(--font-mono);font-size:.66rem;letter-spacing:.3em;color:#7d5713;text-transform:uppercase}
+.cert-title{font-family:var(--font-display);font-weight:800;font-size:clamp(1.35rem,4.4vw,2.1rem);color:#1b1206;margin:14px 0 4px;line-height:1.2}
+.cert-sub{font-size:.84rem;color:#6b5828;margin-bottom:22px}
+.cert-line{font-size:.92rem;color:#5c4a22}
+.cert-name{font-family:var(--font-display);font-weight:800;font-size:clamp(1.6rem,6vw,2.6rem);color:#8a1f10;
+  margin:10px 0 14px;padding-bottom:10px;border-bottom:1.5px solid rgba(160,120,30,.4);display:inline-block;min-width:56%;word-break:break-word}
+.cert-body{font-size:.92rem;color:#4c3d1a;line-height:1.75;max-width:56ch;margin:0 auto}
+.cert-meta{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap;margin-top:32px;padding-top:18px;border-top:1px solid rgba(160,120,30,.3);text-align:left}
+.cert-meta div .k{font-family:var(--font-mono);font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;color:#6f5518}
+.cert-meta div .v{font-family:var(--font-display);font-weight:800;font-size:.98rem;color:#2a1f0a}
+.seal{position:absolute;right:28px;top:26px;width:62px;height:62px;color:rgba(150,110,20,.4)}
+@media (max-width:600px){.seal{position:static;margin:22px auto 0;display:block}}
+
+/* ---------- toast ---------- */
+.toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,260%);z-index:60;opacity:0;visibility:hidden;
+  display:flex;align-items:center;gap:12px;padding:14px 22px;border-radius:99px;
+  background:linear-gradient(135deg,rgba(230,193,90,.97),#f0d38a);color:#221703;font-weight:700;font-size:.92rem;
+  box-shadow:0 20px 44px -18px rgba(230,193,90,.7);transition:transform .45s cubic-bezier(.2,1.2,.4,1),opacity .3s,visibility .3s}
+.toast.show{transform:translate(-50%,0);opacity:1;visibility:visible}
+.toast svg{width:20px;height:20px}
+
+/* ---------- confetti ---------- */
+.confetti{position:fixed;inset:0;pointer-events:none;z-index:50;overflow:hidden}
+.confetti i{position:absolute;top:-12vh;width:9px;height:14px;opacity:.9;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(118vh) rotate(760deg);opacity:.1}}
+
+@media (max-width:720px){
+  .hud{grid-template-columns:1fr 1fr;gap:10px}
+  .hudcard:first-child{grid-column:1/-1}
+  .grid{grid-template-columns:1fr}
+  .screen{padding:22px 0 64px}
+  .wrap{padding:0 16px}
+  .card{padding:20px}
+  .actions .btn{min-width:100%}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
+}
+@media print{
+  body{background:#fff!important}
+  body::before{display:none}
+  .wrap>.screen:not(#screen-victory){display:none!important}
+  .topbar,.actions,.statrow,.badges,#victory-head,.cert-actions,.footnote{display:none!important}
+  .certificate{box-shadow:none;border-color:#c9a34a}
+  .screen{padding:0}
+}
+</style>
+</head>
+<body class="lang-en">
+
+<!-- ==================== LANDING ==================== -->
+<section class="screen active" id="screen-landing">
+  <div class="wrap">
+    <div class="hero">
+      <svg class="emblem" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M12 2.6v18.8M8.5 21.4h7"/>
+        <path d="M12 5.4H5.2M12 5.4h6.8"/>
+        <path d="M5.2 5.4 2.4 12.2a3.1 3.1 0 0 0 5.6 0L5.2 5.4Z"/>
+        <path d="M18.8 5.4l-2.8 6.8a3.1 3.1 0 0 0 5.6 0l-2.8-6.8Z"/>
+      </svg>
+      <div class="kicker mono" id="lg-kicker">The Constitution Challenge</div>
+      <h1><span id="lg-title">SAMVIDHAN</span> <span class="accent" id="lg-title2">QUEST</span></h1>
+      <p class="tagline" id="lg-tagline">Don't just read your rights. <strong>Play them.</strong></p>
+      <p class="intro" id="lg-intro">Five missions. Real Indian situations. One Constitution.</p>
+
+      <div class="setup panel">
+        <label class="label" for="nameInput" id="lg-name">What should we call you, Guardian?</label>
+        <input type="text" id="nameInput" maxlength="28" autocomplete="name" placeholder="Your name">
+        <label class="label" id="lg-lang" style="margin-top:20px">Choose your language</label>
+        <div class="langrow" id="langrow" role="group" aria-labelledby="lg-lang">
+          <button class="langchip" data-lang="en" aria-pressed="true">English</button>
+          <button class="langchip" data-lang="hi" aria-pressed="false">हिन्दी</button>
+          <button class="langchip" data-lang="hinglish" aria-pressed="false">Hinglish</button>
+        </div>
+        <button class="btn" id="startBtn">
+          <span id="lg-start">START ADVENTURE</span>
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+      </div>
+
+      <div class="feat">
+        <span>5 story missions</span><span>Articles 14 · 15 · 19 · 21A · 32 · 51A</span><span>XP &amp; badges</span><span>English · हिन्दी · Hinglish</span>
+      </div>
+      <p class="footnote" id="lg-foot">Constitution of India — Articles 14, 15, 17, 19, 21A, 32, 51A. Text: legislative.gov.in / India Code.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== MAP ==================== -->
+<section class="screen" id="screen-map">
+  <div class="wrap">
+    <div class="topbar">
+      <div class="brand">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2.6v18.8M8.5 21.4h7M12 5.4H5.2M12 5.4h6.8M5.2 5.4 2.4 12.2a3.1 3.1 0 0 0 5.6 0L5.2 5.4ZM18.8 5.4l-2.8 6.8a3.1 3.1 0 0 0 5.6 0l-2.8-6.8Z"/></svg>
+        <span id="map-brand">Samvidhan Quest</span>
+      </div>
+      <div class="spacer"></div>
+      <div class="minilang" id="minilang">
+        <button data-lang="en" aria-pressed="true">EN</button>
+        <button data-lang="hi" aria-pressed="false">हि</button>
+        <button data-lang="hinglish" aria-pressed="false">HI-EN</button>
+      </div>
+    </div>
+
+    <div class="hud">
+      <div class="hudcard">
+        <div class="k mono" id="map-progress">Your Progress</div>
+        <div class="v"><span id="hud-name">Guardian</span></div>
+        <div class="bar"><i id="hud-bar"></i></div>
+      </div>
+      <div class="hudcard">
+        <div class="k mono" id="map-xp">XP</div>
+        <div class="v"><span id="hud-xp">0</span> <small>/ 750</small></div>
+      </div>
+      <div class="hudcard">
+        <div class="k mono" id="map-missions">Missions</div>
+        <div class="v"><span id="hud-done">0</span> <small>/ 5</small></div>
+      </div>
+    </div>
+
+    <div class="sectionhead">
+      <h2 id="map-title">Mission Map</h2>
+      <p id="map-sub">Get the call right to unlock the next mission.</p>
+    </div>
+
+    <div class="grid" id="missionGrid"></div>
+
+    <div class="sectionhead" style="margin-top:38px">
+      <h2 id="badge-title" style="font-size:1.1rem">Your Badges</h2>
+    </div>
+    <div class="badges" id="badgeRow"></div>
+
+    <div class="actions">
+      <button class="btn ghost" id="resetBtn"><span id="reset-lbl">Reset progress</span></button>
+    </div>
+    <p class="footnote" id="map-foot">An educational game. Content is drawn from the Constitution of India and leading judgments, but it is not legal advice.</p>
+  </div>
+</section>
+
+<!-- ==================== MISSION ==================== -->
+<section class="screen" id="screen-mission">
+  <div class="wrap">
+    <div class="topbar">
+      <button class="btn ghost" id="backBtn" style="width:auto;margin:0;padding:10px 18px;font-size:.86rem">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>
+        <span id="back-lbl">Back to Mission Map</span>
+      </button>
+      <div class="spacer"></div>
+      <div class="hudcard" style="padding:9px 16px;display:flex;align-items:center;gap:10px">
+        <span class="mono" style="color:var(--text-faint)">XP</span>
+        <strong id="m-xp" style="font-family:var(--font-display);font-size:1.05rem">0</strong>
+      </div>
+    </div>
+
+    <div class="mhead" id="m-head">
+      <div class="tag mono" id="m-tag">Mission 01</div>
+      <h2 id="m-title">—</h2>
+      <div class="art2" id="m-art">—</div>
+    </div>
+
+    <div class="card">
+      <div class="block" style="background:transparent;border:none;padding:0">
+        <h4 id="m-scenario-lbl">The Situation</h4>
+      </div>
+      <p class="lead" id="m-brief">—</p>
+      <p class="q" id="m-question">—</p>
+      <div class="choices" id="m-choices"></div>
+      <div id="m-feedback"></div>
+    </div>
+
+    <details class="mentor" id="mentorBox">
+      <summary>
+        <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 4 7v6c0 4.4 3.4 7.4 8 8 4.6-.6 8-3.6 8-8V7l-8-4Z"/><path d="m9.2 12.2 1.9 1.9 3.7-3.9"/></svg></span>
+        <span id="mentor-lbl">Ask the Constitution Mentor</span>
+        <svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+      </summary>
+      <div class="mbody">
+        <div class="mlog" id="mlog"></div>
+        <div class="mform">
+          <input type="text" id="minput" placeholder="e.g. What is Article 32?">
+          <button class="btn emerald" id="msend">Ask</button>
+        </div>
+      </div>
+    </details>
+  </div>
+</section>
+
+<!-- ==================== VICTORY ==================== -->
+<section class="screen" id="screen-victory">
+  <div class="wrap">
+    <div class="victory" id="victory-head">
+      <svg class="trophy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M7 4h10v5a5 5 0 0 1-10 0V4Z"/>
+        <path d="M7 5H4.6a2.6 2.6 0 0 0 2.6 4.4M17 5h2.4a2.6 2.6 0 0 1-2.6 4.4"/>
+        <path d="M12 14v4M8.5 21h7M9.5 18h5"/>
+      </svg>
+      <h2 id="v-title">You are now a Guardian of the Constitution</h2>
+      <p class="sub" id="v-sub">You completed all five missions.</p>
+    </div>
+
+    <div class="statrow">
+      <div class="stat"><div class="k mono" id="v-score-lbl">Score</div><div class="v"><span id="v-xp">0</span> XP</div></div>
+      <div class="stat"><div class="k mono" id="v-rank-lbl">Rank</div><div class="v" id="v-rank" style="font-size:1.05rem">—</div></div>
+      <div class="stat"><div class="k mono" id="v-missions-lbl">Missions</div><div class="v">5 / 5</div></div>
+    </div>
+
+    <div class="badges" id="v-badges" style="justify-content:center;margin-bottom:8px"></div>
+
+    <div class="certificate" id="certificate">
+      <div class="cert-kicker" id="c-kicker">Samvidhan Quest · The Constitution Challenge</div>
+      <div class="cert-title" id="c-title">Certificate of Completion</div>
+      <div class="cert-sub" id="c-sub">Guardian of the Constitution</div>
+      <div class="cert-line" id="c-line">This certifies that</div>
+      <div class="cert-name" id="c-name">Guardian</div>
+      <p class="cert-body" id="c-body">has completed all five missions of SAMVIDHAN QUEST — The Constitution Challenge, showing an understanding of the fundamental rights and duties of the people of India.</p>
+      <div class="cert-meta">
+        <div><div class="k" id="c-rank-k">Rank</div><div class="v" id="c-rank">—</div></div>
+        <div><div class="k" id="c-score-k">Score</div><div class="v"><span id="c-score">0</span> XP</div></div>
+        <div><div class="k" id="c-date-k">Date</div><div class="v" id="c-date">—</div></div>
+      </div>
+      <svg class="seal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M12 2.6v18.8M8.5 21.4h7M12 5.4H5.2M12 5.4h6.8M5.2 5.4 2.4 12.2a3.1 3.1 0 0 0 5.6 0L5.2 5.4ZM18.8 5.4l-2.8 6.8a3.1 3.1 0 0 0 5.6 0l-2.8-6.8Z"/>
+      </svg>
+    </div>
+
+    <div class="actions cert-actions" style="justify-content:center">
+      <button class="btn" id="printBtn"><span id="v-print">Save / Print Certificate</span></button>
+      <button class="btn ghost" id="againBtn"><span id="v-again">Play Again</span></button>
+    </div>
+    <p class="footnote" id="v-foot">An educational game. Content is drawn from the Constitution of India and leading judgments, but it is not legal advice.</p>
+  </div>
+</section>
+
+<div class="toast" id="toast"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7"/></svg><span id="toastTxt"></span></div>
+
+<script>
+/* ==========================================================================
+   SAMVIDHAN QUEST — content data
+   All scenario text, explanations and UI strings in English / Hindi / Hinglish.
+   Article text and case names are cited from the Constitution of India and
+   reported judgments. Educational use only — not legal advice.
+   ========================================================================== */
+
+const I18N = {
+  en: {
+    appTitle: "SAMVIDHAN QUEST",
+    tagline: "Don't just read your rights. Play them.",
+    intro: "Five missions. Real Indian situations. One Constitution.",
+    startAdventure: "START ADVENTURE",
+    enterName: "What should we call you, Guardian?",
+    namePlaceholder: "Your name",
+    chooseLang: "Choose your language",
+    begin: "Begin the Journey",
+    mapTitle: "Mission Map",
+    mapSub: "Get the call right to unlock the next mission.",
+    yourProgress: "Your Progress",
+    xp: "XP",
+    missionsDone: "Missions",
+    badges: "Badges",
+    startMission: "Start Mission",
+    replay: "Replay",
+    locked: "Locked",
+    completed: "Completed",
+    mission: "Mission",
+    of: "of",
+    scenario: "The Situation",
+    whatDoYouDo: "What do you do?",
+    notQuite: "Not quite.",
+    wellDone: "Well done — that is the constitutional call.",
+    yourCall: "Your call",
+    thePrinciple: "The Constitutional Principle",
+    articleLabel: "Relevant Article",
+    whyThis: "Why this is the answer",
+    goingDeeper: "The nuance",
+    inCourt: "How the courts have read it",
+    sources: "Sources",
+    nextMission: "Next Mission",
+    backToMap: "Back to Mission Map",
+    tryAgain: "Try again",
+    askMentor: "Ask the Constitution Mentor",
+    mentorPlaceholder: "e.g. What is Article 32?",
+    mentorBtn: "Ask",
+    mentorGreeting: "Namaste! I am your Constitution Mentor. Ask me about any article, right or duty in this game.",
+    mentorUnknown: "I don't have a scripted answer for that yet. Try Article 14, 15, 19, 21A, 32 or 51A — or ask about PIL, writs, or fundamental duties.",
+    xpEarned: "XP earned",
+    perfect: "First-try bonus!",
+    victoryTitle: "You are now a Guardian of the Constitution",
+    victorySub: "You completed all five missions.",
+    certTitle: "Certificate of Completion",
+    certLine: "This certifies that",
+    certLine2: "has completed all five missions of SAMVIDHAN QUEST — The Constitution Challenge, showing an understanding of the fundamental rights and duties of the people of India.",
+    certRank: "Rank",
+    certScore: "Score",
+    certDate: "Date",
+    printCert: "Save / Print Certificate",
+    playAgain: "Play Again",
+    reset: "Reset progress",
+    badgesTitle: "Your Badges",
+    disclaimer: "An educational game. Content is drawn from the Constitution of India and leading judgments, but it is not legal advice.",
+    footer: "Constitution of India — Articles 14, 15, 17, 19, 21A, 32, 51A. Text: legislative.gov.in / India Code.",
+    mentorAiNote: "AI Mentor: this build runs fully offline. To connect a Sarvam AI mentor, point the game at your own server proxy — never put an API key in this page."
+  },
+  hi: {
+    appTitle: "संविधान क्वेस्ट",
+    tagline: "अपने अधिकारों को सिर्फ़ पढ़िए नहीं — खेलिए।",
+    intro: "पाँच मिशन। भारत की असली स्थितियाँ। एक संविधान।",
+    startAdventure: "अभियान शुरू करें",
+    enterName: "हम आपको क्या कहकर बुलाएँ, रक्षक?",
+    namePlaceholder: "आपका नाम",
+    chooseLang: "अपनी भाषा चुनें",
+    begin: "यात्रा शुरू करें",
+    mapTitle: "मिशन मैप",
+    mapSub: "सही उत्तर देकर अगला मिशन खोलें।",
+    yourProgress: "आपकी प्रगति",
+    xp: "अंक",
+    missionsDone: "मिशन",
+    badges: "बैज",
+    startMission: "मिशन शुरू करें",
+    replay: "फिर खेलें",
+    locked: "बंद",
+    completed: "पूरा हुआ",
+    mission: "मिशन",
+    of: "में से",
+    scenario: "परिस्थिति",
+    whatDoYouDo: "आप क्या करेंगे?",
+    notQuite: "यह ठीक नहीं है।",
+    wellDone: "शाबाश — यही संवैधानिक उत्तर है।",
+    yourCall: "आपका उत्तर",
+    thePrinciple: "संवैधानिक सिद्धांत",
+    articleLabel: "संबंधित अनुच्छेद",
+    whyThis: "यह उत्तर क्यों सही है",
+    goingDeeper: "बारीकी",
+    inCourt: "न्यायालयों की व्याख्या",
+    sources: "स्रोत",
+    nextMission: "अगला मिशन",
+    backToMap: "मिशन मैप पर लौटें",
+    tryAgain: "फिर से प्रयास करें",
+    askMentor: "संविधान गुरु से पूछें",
+    mentorPlaceholder: "जैसे: अनुच्छेद 32 क्या है?",
+    mentorBtn: "पूछें",
+    mentorGreeting: "नमस्ते! मैं आपका संविधान गुरु हूँ। इस खेल के किसी भी अनुच्छेद, अधिकार या कर्तव्य के बारे में पूछें।",
+    mentorUnknown: "इसका उत्तर मेरे पास अभी नहीं है। अनुच्छेद 14, 15, 19, 21A, 32 या 51A, या जनहित याचिका, रिट, मूल कर्तव्य के बारे में पूछें।",
+    xpEarned: "अर्जित अंक",
+    perfect: "पहले प्रयास का बोनस!",
+    victoryTitle: "अब आप संविधान के रक्षक हैं",
+    victorySub: "आपने सभी पाँच मिशन पूरे कर लिए।",
+    certTitle: "पूर्णता प्रमाणपत्र",
+    certLine: "यह प्रमाणित करता है कि",
+    certLine2: "ने संविधान क्वेस्ट के सभी पाँच मिशन पूरे किए हैं, और भारत के नागरिकों के मूल अधिकारों तथा कर्तव्यों की समझ प्रदर्शित की है।",
+    certRank: "श्रेणी",
+    certScore: "अंक",
+    certDate: "दिनांक",
+    printCert: "प्रमाणपत्र सहेजें / प्रिंट करें",
+    playAgain: "फिर खेलें",
+    reset: "प्रगति रीसेट करें",
+    badgesTitle: "आपके बैज",
+    disclaimer: "यह एक शैक्षिक खेल है। सामग्री भारत के संविधान और प्रमुख निर्णयों पर आधारित है, पर यह कानूनी सलाह नहीं है।",
+    footer: "भारत का संविधान — अनुच्छेद 14, 15, 17, 19, 21A, 32, 51A। पाठ: legislative.gov.in / India Code।",
+    mentorAiNote: "एआई गुरु: यह संस्करण पूरी तरह ऑफ़लाइन चलता है। सर्वम एआई गुरु जोड़ने के लिए अपने सर्वर प्रॉक्सी से जोड़ें — इस पेज में कभी एपीआई कुंजी न रखें।"
+  },
+  hinglish: {
+    appTitle: "SAMVIDHAN QUEST",
+    tagline: "Apne adhikaar sirf padho mat — khelo.",
+    intro: "Paanch mission. India ki asli situations. Ek Samvidhan.",
+    startAdventure: "START ADVENTURE",
+    enterName: "Hum aapko kya bulayein, Guardian?",
+    namePlaceholder: "Aapka naam",
+    chooseLang: "Apni bhasha chunein",
+    begin: "Safar shuru karein",
+    mapTitle: "Mission Map",
+    mapSub: "Sahi jawab dekar agla mission unlock karein.",
+    yourProgress: "Aapki progress",
+    xp: "XP",
+    missionsDone: "Missions",
+    badges: "Badges",
+    startMission: "Mission shuru karein",
+    replay: "Dobara khelein",
+    locked: "Locked",
+    completed: "Poora hua",
+    mission: "Mission",
+    of: "mein se",
+    scenario: "Situation",
+    whatDoYouDo: "Aap kya karenge?",
+    notQuite: "Bilkul nahi.",
+    wellDone: "Shabaash — yahi sahi constitutional jawab hai.",
+    yourCall: "Aapka jawab",
+    thePrinciple: "Constitutional Principle",
+    articleLabel: "Relevant Article",
+    whyThis: "Yeh jawab kyun sahi hai",
+    goingDeeper: "Nuance",
+    inCourt: "Courts ne kaise dekha",
+    sources: "Sources",
+    nextMission: "Agla Mission",
+    backToMap: "Mission Map par wapas",
+    tryAgain: "Dobara try karein",
+    askMentor: "Constitution Mentor se poochein",
+    mentorPlaceholder: "jaise: Article 32 kya hai?",
+    mentorBtn: "Poochho",
+    mentorGreeting: "Namaste! Main aapka Constitution Mentor hoon. Is game ke kisi bhi article, adhikaar ya duty ke baare mein poochho.",
+    mentorUnknown: "Iska jawab mere paas abhi nahi hai. Article 14, 15, 19, 21A, 32 ya 51A, ya PIL, writs, ya fundamental duties ke baare mein poochho.",
+    xpEarned: "XP mila",
+    perfect: "Pehli baar sahi — bonus!",
+    victoryTitle: "Ab aap Guardian of the Constitution hain",
+    victorySub: "Aapne paanchon mission poore kar liye.",
+    certTitle: "Certificate of Completion",
+    certLine: "Yeh pramanit karta hai ki",
+    certLine2: "ne SAMVIDHAN QUEST ke paanchon mission poore kiye hain, aur Bharat ke naagrikon ke mool adhikaaron aur kartavyon ki samajh dikhayi hai.",
+    certRank: "Rank",
+    certScore: "Score",
+    certDate: "Date",
+    printCert: "Certificate save / print karein",
+    playAgain: "Dobara khelein",
+    reset: "Progress reset karein",
+    badgesTitle: "Aapke Badges",
+    disclaimer: "Yeh ek educational game hai. Content Bharat ke Samvidhan aur pramukh faislon par based hai, par yeh legal advice nahi hai.",
+    footer: "Constitution of India — Articles 14, 15, 17, 19, 21A, 32, 51A. Text: legislative.gov.in / India Code.",
+    mentorAiNote: "AI Mentor: yeh build fully offline chalta hai. Sarvam AI mentor jodne ke liye apne server proxy se connect karein — is page mein API key kabhi na rakhein."
+  }
+};
+
+/* Rank tiers by XP (max possible = 750) */
+const RANKS = [
+  { min: 750, label: { en: "Constitutional Luminary", hi: "संविधान का विद्वान", hinglish: "Constitutional Luminary" } },
+  { min: 550, label: { en: "Guardian of the Constitution", hi: "संविधान का रक्षक", hinglish: "Guardian of the Constitution" } },
+  { min: 350, label: { en: "Rights Defender", hi: "अधिकारों का रक्षक", hinglish: "Rights Defender" } },
+  { min: 150, label: { en: "Citizen in Training", hi: "प्रशिक्षु नागरिक", hinglish: "Citizen in Training" } },
+  { min: 0,   label: { en: "Curious Learner", hi: "जिज्ञासु विद्यार्थी", hinglish: "Curious Learner" } }
+];
+
+const MISSIONS = [
+  /* ------------------------------------------------------------------ 1 */
+  {
+    id: 1,
+    num: "01",
+    theme: "saffron",
+    title: {
+      en: "The Door That Shouldn't Be Closed",
+      hi: "वह दरवाज़ा जो बंद नहीं होना चाहिए",
+      hinglish: "Woh Darwaza Jo Band Nahi Hona Chahiye"
+    },
+    subtitle: {
+      en: "Equality & non-discrimination",
+      hi: "समानता और भेदभाव का निषेध",
+      hinglish: "Equality aur bhedbhaav ka nishedh"
+    },
+    article: "Articles 14, 15 & 17",
+    badge: { en: "Equality Sentinel", hi: "समानता का प्रहरी", hinglish: "Equality Sentinel" },
+    brief: {
+      en: "You are helping at a busy tea stall near your college. A customer, Ravi, comes up to order. Glancing at his name and appearance, the shopkeeper quietly tells him the shop is 'full today' — even though several tables are empty. Ravi says he has been refused service at three shops this week because of his caste, and asks you what his rights are.",
+      hi: "आप अपने कॉलेज के पास की एक भीड़-भाड़ वाली चाय की दुकान पर मदद कर रहे हैं। एक ग्राहक, रवि, ऑर्डर देने आता है। उसका नाम और रूप देखकर दुकानदार चुपचाप कह देता है कि आज 'दुकान भरी हुई है' — जबकि कई मेज़ें खाली हैं। रवि बताता है कि इस हफ़्ते जाति के कारण तीन दुकानों पर उसे सेवा देने से मना किया गया, और पूछता है कि उसके अधिकार क्या हैं।",
+      hinglish: "Aap apne college ke paas wali chai ki dukaan par help kar rahe ho. Ek customer, Ravi, order dene aata hai. Uska naam aur shakal dekh kar dukaan-daar chupke se keh deta hai ki aaj 'dukaan bhari hui hai' — jabki kai tables khaali hain. Ravi batata hai ki is hafte jaati ke kaaran teen dukaano par usse service dene se mana kiya gaya, aur poochta hai ki uske adhikaar kya hain."
+    },
+    question: {
+      en: "What is the most constitutionally sound thing to do?",
+      hi: "सबसे संवैधानिक रूप से सही काम क्या होगा?",
+      hinglish: "Sabse sahi constitutional kaam kya hoga?"
+    },
+    choices: [
+      {
+        correct: false,
+        text: {
+          en: "\u201cIt's a private business. The owner can serve whoever he likes — there's nothing to be done.\u201d",
+          hi: "\u201cयह निजी दुकान है। मालिक जिसे चाहे सेवा दे या न दे — कुछ नहीं किया जा सकता।\u201d",
+          hinglish: "\u201cYeh private dukaan hai. Maalik jise chahe serve kare ya na kare — kuch nahi ho sakta.\u201d"
+        },
+        explain: {
+          en: "This misses a key point: equality rights do not stop at the government's door. Article 15(2) specifically forbids discrimination on grounds of religion, race, caste, sex or place of birth in access to shops, public restaurants, hotels and places of public entertainment. Article 17 abolishes 'untouchability' in any form. A tea stall open to the public cannot lawfully shut out a customer because of caste.",
+          hi: "यहाँ मुख्य बात छूट रही है: समानता का अधिकार सरकार के दरवाज़े पर ख़त्म नहीं होता। अनुच्छेद 15(2) धर्म, नस्ल, जाति, लिंग या जन्म-स्थान के आधार पर दुकानों, सार्वजनिक भोजनालयों, होटलों और सार्वजनिक मनोरंजन-स्थलों तक पहुँच में भेदभाव को स्पष्ट रूप से मना करता है। अनुच्छेद 17 किसी भी रूप में 'अस्पृश्यता' को समाप्त करता है। जनता के लिए खुली चाय की दुकान जाति के आधार पर ग्राहक को कानूनी रूप से बाहर नहीं कर सकती।",
+          hinglish: "Yahan main baat chhoot rahi hai: equality ka adhikaar sarkar ke darwaze par khatam nahi hota. Article 15(2) dharm, race, jaati, ling ya janm-sthaan ke aadhaar par dukaano, public restaurants, hotels aur public entertainment places tak pahunch mein bhedbhaav ko saaf mana karta hai. Article 17 kisi bhi roop mein 'untouchability' ko khatam karta hai. Public ke liye khuli chai ki dukaan jaati ke aadhaar par customer ko bahar nahi kar sakti."
+        }
+      },
+      {
+        correct: true,
+        text: {
+          en: "\u201cPoint out that refusing service on the basis of caste violates Articles 15(2) and 17, and help Ravi make a written complaint to the police and the District Magistrate.\u201d",
+          hi: "\u201cबताइए कि जाति के आधार पर सेवा देने से मना करना अनुच्छेद 15(2) और 17 का उल्लंघन है, और रवि को पुलिस तथा ज़िला मजिस्ट्रेट के पास लिखित शिकायत दर्ज कराने में मदद कीजिए।\u201d",
+          hinglish: "\u201cBatao ki jaati ke aadhaar par service dene se mana karna Article 15(2) aur 17 ka ullanghan hai, aur Ravi ko police aur District Magistrate ke paas likhit complaint dene mein madad karo.\u201d"
+        },
+        explain: {
+          en: "This is the right call. Article 14 guarantees equality before the law and equal protection of the laws. Article 15(1) bars the State from discriminating on grounds of religion, race, caste, sex or place of birth. Crucially, Article 15(2) extends protection into private, public-facing spaces — shops, restaurants, hotels and places of public entertainment — and Article 17 abolishes untouchability outright. Refusing service because of caste is precisely what these provisions forbid, and there are real remedies: a police complaint and, where applicable, the SC/ST (Prevention of Atrocities) Act, 1989.",
+          hi: "यही सही उत्तर है। अनुच्छेद 14 विधि के समक्ष समानता और विधियों के समान संरक्षण की गारंटी देता है। अनुच्छेद 15(1) राज्य को धर्म, नस्ल, जाति, लिंग या जन्म-स्थान के आधार पर भेदभाव से रोकता है। महत्वपूर्ण रूप से, अनुच्छेद 15(2) संरक्षण को निजी, पर जनता के लिए खुले स्थानों — दुकानों, भोजनालयों, होटलों और सार्वजनिक मनोरंजन-स्थलों — तक बढ़ाता है, और अनुच्छेद 17 अस्पृश्यता को पूरी तरह समाप्त करता है। जाति के आधार पर सेवा से मना करना ठीक वही है जिसे ये प्रावधान मना करते हैं, और इसके वास्तविक उपाय हैं: पुलिस शिकायत और, जहाँ लागू हो, अनुसूचित जाति/जनजाति (अत्याचार निवारण) अधिनियम, 1989।",
+          hinglish: "Yahi sahi jawab hai. Article 14 kanoon ke saamne samanata aur kanoon ke samaan sanrakshan ki guarantee deta hai. Article 15(1) State ko dharm, race, jaati, ling ya janm-sthaan ke aadhaar par bhedbhaav se rokta hai. Sabse important, Article 15(2) protection ko private par public ke liye khule spaces — dukaanein, restaurants, hotels aur public entertainment places — tak badhata hai, aur Article 17 untouchability ko poori tarah khatam karta hai. Jaati ke aadhaar par service se mana karna bilkul wahi hai jise yeh provisions rok-te hain, aur iske asli upaay hain: police complaint aur, jahan laagu ho, SC/ST (Prevention of Atrocities) Act, 1989."
+        }
+      },
+      {
+        correct: false,
+        text: {
+          en: "\u201cTell Ravi that Article 14 protects people only from government action, so private shops are free to discriminate.\u201d",
+          hi: "\u201cरवि को बताइए कि अनुच्छेद 14 केवल सरकारी कार्रवाई से बचाता है, इसलिए निजी दुकानें भेदभाव करने को स्वतंत्र हैं।\u201d",
+          hinglish: "\u201cRavi ko batao ki Article 14 sirf sarkari kaam se bachata hai, isliye private dukaanein bhedbhaav karne ko free hain.\u201d"
+        },
+        explain: {
+          en: "Half true, and therefore misleading. Article 14 does bind the State, but Articles 15(2) and 17 also reach private conduct in public-facing spaces. So the conclusion — 'private shops may discriminate' — is wrong. Nuance matters here: not every private refusal is unconstitutional, but a refusal on the ground of caste, in a shop open to the public, plainly is.",
+          hi: "आधा सच, इसलिए भ्रामक। अनुच्छेद 14 राज्य को बाध्य करता है, पर अनुच्छेद 15(2) और 17 जनता के लिए खुले स्थानों में निजी आचरण पर भी लागू होते हैं। अतः निष्कर्ष — 'निजी दुकानें भेदभाव कर सकती हैं' — ग़लत है। बारीकी ज़रूरी है: हर निजी मना करना असंवैधानिक नहीं है, लेकिन जनता के लिए खुली दुकान में जाति के आधार पर मना करना स्पष्ट रूप से है।",
+          hinglish: "Aadha sach, isliye misleading. Article 14 State ko bandhta hai, par Article 15(2) aur 17 public ke liye khule spaces mein private conduct par bhi laagu hote hain. Isliye nateeja — 'private dukaanein bhedbhaav kar sakti hain' — galat hai. Nuance zaroori hai: har private refusal unconstitutional nahi hai, lekin public dukaan mein jaati ke aadhaar par refusal saaf taur par hai."
+        }
+      }
+    ],
+    principle: {
+      en: "Equality before the law; prohibition of discrimination; abolition of untouchability.",
+      hi: "विधि के समक्ष समानता; भेदभाव का निषेध; अस्पृश्यता का उन्मूलन।",
+      hinglish: "Kanoon ke saamne samanata; bhedbhaav ka nishedh; untouchability ka unmoolan."
+    },
+    reasoning: {
+      en: "Not every discrimination claim is alike. Articles 14–17 bind the State directly, while Article 15(2) and Article 17 also reach private conduct in spaces open to the public. Courts read these together to protect dignity, not merely formal equality.",
+      hi: "हर भेदभाव की शिकायत एक जैसी नहीं होती। अनुच्छेद 14–17 सीधे राज्य को बाध्य करते हैं, जबकि अनुच्छेद 15(2) और 17 जनता के लिए खुले स्थानों में निजी आचरण पर भी लागू होते हैं। न्यायालय इन्हें साथ पढ़कर गरिमा की रक्षा करते हैं, केवल औपचारिक समानता की नहीं।",
+      hinglish: "Har bhedbhaav ki shikayat ek jaisi nahi hoti. Articles 14–17 seedhe State ko bandhte hain, jabki Article 15(2) aur 17 public ke liye khule spaces mein private conduct par bhi laagu hote hain. Courts inhe saath padh kar dignity ki raksha karte hain, sirf formal equality ki nahi."
+    },
+    caseNote: {
+      en: "In Indian Young Lawyers Association v. State of Kerala (2018), the Supreme Court stressed that dignity and non-discrimination are core constitutional values. Article 17 has been read expansively to strike at caste-based exclusion in public life.",
+      hi: "इंडियन यंग लॉयर्स एसोसिएशन बनाम केरल राज्य (2018) में उच्चतम न्यायालय ने कहा कि गरिमा और भेदभाव-रहित व्यवहार संविधान के मूल मूल्य हैं। अनुच्छेद 17 की व्यापक व्याख्या की गई है ताकि सार्वजनिक जीवन में जाति-आधारित बहिष्कार पर प्रहार हो सके।",
+      hinglish: "Indian Young Lawyers Association v. State of Kerala (2018) mein Supreme Court ne kaha ki dignity aur bhedbhaav-rahit vyavhaar Samvidhan ke mool values hain. Article 17 ki vyapak vyakhya ki gayi hai taaki public life mein jaati-based bahishkaar par prahaar ho sake."
+    },
+    sources: [
+      "Constitution of India, Articles 14, 15 and 17 — legislative.gov.in",
+      "Protection of Civil Rights Act, 1955",
+      "Scheduled Castes and Scheduled Tribes (Prevention of Atrocities) Act, 1989",
+      "Indian Young Lawyers Association v. State of Kerala, (2019) 11 SCC 1"
+    ]
+  },
+
+  /* ------------------------------------------------------------------ 2 */
+  {
+    id: 2,
+    num: "02",
+    theme: "emerald",
+    title: {
+      en: "The Cartoon and the Complaint",
+      hi: "कार्टून और शिकायत",
+      hinglish: "Cartoon aur Complaint"
+    },
+    subtitle: {
+      en: "Freedom of expression & reasonable restrictions",
+      hi: "अभिव्यक्ति की स्वतंत्रता और उचित प्रतिबंध",
+      hinglish: "Expression ki azaadi aur reasonable restrictions"
+    },
+    article: "Articles 19(1)(a) & 19(2)",
+    badge: { en: "Voice of Reason", hi: "तर्क की आवाज़", hinglish: "Voice of Reason" },
+    brief: {
+      en: "A classmate, Meera, posts a satirical cartoon mocking a State minister's broken election promise. Within a day a local police officer telephones her, warning of a case for 'sedition' and 'hurting public sentiment' unless she deletes the post. She is frightened and asks you whether she has any protection.",
+      hi: "आपकी सहपाठी मीरा एक सांसद-विरोधी कार्टून सोशल मीडिया पर डालती है, जिसमें एक राज्य मंत्री के टूटे चुनावी वादे का मज़ाक बनाया गया है। एक दिन के भीतर स्थानीय पुलिस अधिकारी उसे फ़ोन करके धमकाता है कि अगर वह पोस्ट नहीं हटाती तो 'राजद्रोह' और 'जनभावना आहत करने' का मुकदमा दर्ज होगा। वह डर गई है और पूछती है कि उसे कोई संरक्षण मिलेगा या नहीं।",
+      hinglish: "Aapki classmate Meera ek satirical cartoon social media par post karti hai, jisme ek State minister ke toote chunavi vaade ka mazaak banaya gaya hai. Ek din ke andar local police officer usse phone kar ke dhamkata hai ki agar woh post nahi hatati to 'sedition' aur 'public sentiment hurt karne' ka case darj hoga. Woh dar gayi hai aur poochti hai ki usse koi protection milega ya nahi."
+    },
+    question: {
+      en: "How would you advise Meera?",
+      hi: "आप मीरा को क्या सलाह देंगे?",
+      hinglish: "Aap Meera ko kya advice doge?"
+    },
+    choices: [
+      {
+        correct: false,
+        text: {
+          en: "\u201cDelete it. Any criticism of the government is sedition, and you could be jailed.\u201d",
+          hi: "\u201cइसे हटा दो। सरकार की हर आलोचना राजद्रोह है, और तुम्हें जेल हो सकती है।\u201d",
+          hinglish: "\u201cIse hata do. Sarkar ki har aalochana sedition hai, aur tumhe jail ho sakti hai.\u201d"
+        },
+        explain: {
+          en: "This is exactly the fear that chills free speech. Criticism of the government is not sedition. Sedition — formerly Section 124A of the Indian Penal Code, now Section 152 of the Bharatiya Nyaya Sanhita, 2023 — has been read narrowly by the Supreme Court to require incitement to violence or a tendency to create public disorder, not merely strong, satirical or offensive criticism. Shreya Singhal (2015) also struck down the vague Section 66A of the IT Act precisely because it criminalised speech without clear limits.",
+          hi: "यही डर अभिव्यक्ति की स्वतंत्रता को ठंडा कर देता है। सरकार की आलोचना राजद्रोह नहीं है। उच्चतम न्यायालय ने राजद्रोह — पहले भारतीय दंड संहिता की धारा 124A, अब भारतीय न्याय संहिता, 2023 की धारा 152 — की संकीर्ण व्याख्या की है — इसके लिए हिंसा भड़काना या लोक-व्यवस्था बिगड़ने की प्रवृत्ति चाहिए, केवल तीखी, व्यंग्यपूर्ण या आपत्तिजनक आलोचना नहीं। श्रेया सिंघल (2015) ने भी आईटी अधिनियम की अस्पष्ट धारा 66A को इसी कारण रद्द किया कि वह स्पष्ट सीमाओं के बिना बोलने को अपराध बनाती थी।",
+          hinglish: "Yahi dar free speech ko thanda kar deta hai. Sarkar ki aalochana sedition nahi hai. Supreme Court ne sedition — pehle IPC ki Section 124A, ab Bharatiya Nyaya Sanhita, 2023 ki Section 152 — ko narrow padha hai — iske liye violence bhadkana ya public disorder ki tendency chahiye, sirf teekhi, satirical ya offensive aalochana nahi. Shreya Singhal (2015) ne bhi IT Act ki vague Section 66A ko isi kaaran radd kiya ki woh saaf limits ke bina bolne ko crime banati thi."
+        }
+      },
+      {
+        correct: false,
+        text: {
+          en: "\u201cKeep it up. Freedom of speech under Article 19(1)(a) is absolute — the State can never restrict anything you say.\u201d",
+          hi: "\u201cपोस्ट रखो। अनुच्छेद 19(1)(a) के तहत बोलने की स्वतंत्रता निरपेक्ष है — राज्य आपकी किसी बात पर कभी रोक नहीं लगा सकता।\u201d",
+          hinglish: "\u201cPost rakho. Article 19(1)(a) ke tahat bolne ki azaadi absolute hai — State aapki kisi baat par kabhi rok nahi laga sakta.\u201d"
+        },
+        explain: {
+          en: "Right instinct, wrong law. Article 19(1)(a) is a strong but qualified right: Article 19(2) lets the State impose reasonable restrictions on listed grounds — sovereignty and integrity of India, security of the State, friendly relations with foreign States, public order, decency or morality, contempt of court, defamation, and incitement to an offence. So the honest advice is: your speech is protected, but it is not unlimited.",
+          hi: "भावना सही, कानून ग़लत। अनुच्छेद 19(1)(a) मज़बूत पर सशर्त अधिकार है: अनुच्छेद 19(2) राज्य को सूचीबद्ध आधारों पर उचित प्रतिबंध लगाने देता है — भारत की संप्रभुता और अखंडता, राज्य की सुरक्षा, विदेशी राज्यों से मैत्रीपूर्ण संबंध, लोक व्यवस्था, शिष्टाचार या नैतिकता, न्यायालय का अवमान, मानहानि, और किसी अपराध के लिए उकसाना। इसलिए ईमानदार सलाह है: आपकी बात संरक्षित है, पर असीमित नहीं।",
+          hinglish: "Bhaavna sahi, kanoon galat. Article 19(1)(a) strong par qualified adhikaar hai: Article 19(2) State ko listed grounds par reasonable restrictions lagane deta hai — India ki sovereignty aur integrity, State ki security, foreign States se friendly relations, public order, decency ya morality, contempt of court, defamation, aur kisi offence ke liye incitement. Isliye imaandar advice hai: aapki baat protected hai, par unlimited nahi."
+        }
+      },
+      {
+        correct: true,
+        text: {
+          en: "\u201cYour speech is protected but not unlimited. Political satire is generally lawful; restrictions under Article 19(2) must be reasonable, laid down by law, and tied to grounds like public order or defamation — not hurt sentiment. Sedition needs incitement to violence.\u201d",
+          hi: "\u201cआपकी बात संरक्षित है, पर असीमित नहीं। राजनीतिक व्यंग्य सामान्यतः वैध है; अनुच्छेद 19(2) के तहत प्रतिबंध उचित होने चाहिए, विधि द्वारा तय हों, और लोक व्यवस्था या मानहानि जैसे आधारों से जुड़े हों — 'भावना आहत' से नहीं। राजद्रोह के लिए हिंसा भड़काना आवश्यक है।\u201d",
+          hinglish: "\u201cAapki baat protected hai, par unlimited nahi. Political satire aam taur par valid hai; Article 19(2) ke tahat restrictions reasonable hone chahiye, kanoon se tay hon, aur public order ya defamation jaise grounds se jude hon — 'sentiment hurt' se nahi. Sedition ke liye violence bhadkana zaroori hai.\u201d"
+        },
+        explain: {
+          en: "Correct. Article 19(1)(a) guarantees freedom of speech and expression to every citizen. Article 19(2) allows reasonable restrictions, but only if they are (i) imposed by a valid law, (ii) reasonable, and (iii) fall within a listed ground. Political satire aimed at a minister sits at the heart of protected speech — it is how citizens hold power to account. 'Hurt sentiment' is not itself a ground under Article 19(2), and sedition requires incitement to violence or public disorder, not mere criticism.",
+          hi: "सही। अनुच्छेद 19(1)(a) प्रत्येक नागरिक को बोलने और अभिव्यक्ति की स्वतंत्रता की गारंटी देता है। अनुच्छेद 19(2) उचित प्रतिबंध की अनुमति देता है, पर केवल तब जब वे (i) किसी वैध विधि द्वारा लगाए गए हों, (ii) उचित हों, और (iii) सूचीबद्ध आधारों में आते हों। मंत्री पर केंद्रित राजनीतिक व्यंग्य संरक्षित अभिव्यक्ति के मूल में है — नागरिक इसी तरह सत्ता से जवाब माँगते हैं। 'भावना आहत' अपने आप में अनुच्छेद 19(2) का आधार नहीं है, और राजद्रोह के लिए हिंसा या लोक-व्यवस्था भंग करने की प्रवृत्ति चाहिए, केवल आलोचना नहीं।",
+          hinglish: "Sahi. Article 19(1)(a) har naagrik ko bolne aur expression ki azaadi ki guarantee deta hai. Article 19(2) reasonable restrictions ki permission deta hai, par sirf tab jab woh (i) kisi valid kanoon se lagaye gaye hon, (ii) reasonable hon, aur (iii) listed grounds mein aate hon. Minister par political satire protected speech ke dil mein hai — naagrik isi tarah satta se jawaab maangte hain. 'Sentiment hurt' khud koi ground nahi hai, aur sedition ke liye violence ya public disorder chahiye, sirf aalochana nahi."
+        }
+      }
+    ],
+    principle: {
+      en: "Freedom of speech and expression, subject to reasonable restrictions.",
+      hi: "अभिव्यक्ति की स्वतंत्रता, उचित प्रतिबंधों के अधीन।",
+      hinglish: "Speech aur expression ki azaadi, reasonable restrictions ke adheen."
+    },
+    reasoning: {
+      en: "The test is not whether speech offends someone, but whether a restriction is by law, reasonable, and within a listed ground. Criticism of government is treated as essential to democracy, so the burden lies on the State to justify any restriction.",
+      hi: "कसौटी यह नहीं कि बात किसी को आहत करती है या नहीं, बल्कि यह कि प्रतिबंध विधि द्वारा, उचित, और सूचीबद्ध आधार के भीतर है या नहीं। सरकार की आलोचना लोकतंत्र के लिए आवश्यक मानी जाती है, इसलिए किसी भी प्रतिबंध को सही ठहराने का भार राज्य पर है।",
+      hinglish: "Kasauti yeh nahi ki baat kisi ko hurt karti hai ya nahi, balki yeh ki restriction kanoon se, reasonable, aur listed ground ke andar hai ya nahi. Sarkar ki aalochana democracy ke liye zaroori maani jaati hai, isliye kisi bhi restriction ko justify karne ka burden State par hai."
+    },
+    caseNote: {
+      en: "Shreya Singhal v. Union of India (2015) struck down Section 66A of the IT Act for vagueness and its chilling effect on speech. Kedar Nath Singh v. State of Bihar (1962) confined sedition to acts with a tendency to incite violence or public disorder, and in S.G. Vombatkere v. Union of India (2022) the Supreme Court suspended pending sedition prosecutions while the provision was reconsidered. Sedition now sits in Section 152 of the Bharatiya Nyaya Sanhita, 2023, which replaced the Indian Penal Code from 1 July 2024.",
+      hi: "श्रेया सिंघल बनाम भारत संघ (2015) ने आईटी अधिनियम की धारा 66A को उसकी अस्पष्टता और अभिव्यक्ति पर पड़ने वाले डर के कारण रद्द किया। केदार नाथ सिंह बनाम बिहार राज्य (1962) ने राजद्रोह को उन कृत्यों तक सीमित किया जिनमें हिंसा या लोक-व्यवस्था भंग करने की प्रवृत्ति हो, और एस.जी. वोंबटकेरे बनाम भारत संघ (2022) में उच्चतम न्यायालय ने लंबित राजद्रोह मुकदमों पर रोक लगा दी। राजद्रोह अब भारतीय न्याय संहिता, 2023 की धारा 152 में है, जिसने 1 जुलाई 2024 से भारतीय दंड संहिता का स्थान लिया।",
+      hinglish: "Shreya Singhal v. Union of India (2015) ne IT Act ki Section 66A ko uski vagueness aur speech par chilling effect ke kaaran radd kiya. Kedar Nath Singh v. State of Bihar (1962) ne sedition ko un acts tak seemit kiya jinme violence ya public disorder ki tendency ho, aur S.G. Vombatkere v. Union of India (2022) mein Supreme Court ne pending sedition prosecutions par rok laga di. Sedition ab Bharatiya Nyaya Sanhita, 2023 ki Section 152 mein hai, jisne 1 July 2024 se IPC ki jagah li."
+    },
+    sources: [
+      "Constitution of India, Articles 19(1)(a) and 19(2) — legislative.gov.in",
+      "Shreya Singhal v. Union of India, (2015) 5 SCC 1",
+      "Kedar Nath Singh v. State of Bihar, AIR 1962 SC 955",
+      "Bharatiya Nyaya Sanhita, 2023, Section 152 (sedition) — replaced IPC Section 124A from 1 July 2024"
+    ]
+  },
+
+  /* ------------------------------------------------------------------ 3 */
+  {
+    id: 3,
+    num: "03",
+    theme: "gold",
+    title: {
+      en: "The Empty School Bench",
+      hi: "स्कूल की खाली बेंच",
+      hinglish: "School ki Khaali Bench"
+    },
+    subtitle: {
+      en: "The right to education",
+      hi: "शिक्षा का अधिकार",
+      hinglish: "Shiksha ka adhikaar"
+    },
+    article: "Article 21A & the RTE Act, 2009",
+    badge: { en: "Torchbearer of Learning", hi: "शिक्षा का दीपक", hinglish: "Torchbearer of Learning" },
+    brief: {
+      en: "Your neighbour's son, Arjun, is eight years old and has never been enrolled in school. His father says a nearby private school refused him admission, insisting they 'don't take children who can't pay full fees' and that the Right to Education 'applies only to government schools'. He asks you whether anything can be done.",
+      hi: "आपके पड़ोसी का बेटा अर्जुन आठ साल का है और कभी स्कूल में नामांकित नहीं हुआ। उसके पिता बताते हैं कि पास के निजी स्कूल ने प्रवेश से मना कर दिया, यह कहते हुए कि वे 'पूरी फ़ीस न दे सकने वाले बच्चों को नहीं लेते' और शिक्षा का अधिकार 'केवल सरकारी स्कूलों पर लागू होता है'। वे पूछते हैं कि कुछ किया जा सकता है या नहीं।",
+      hinglish: "Aapke padosi ka beta Arjun aath saal ka hai aur kabhi school mein enroll nahi hua. Uske papa batate hain ki paas ke private school ne admission se mana kar diya, yeh kehte hue ki woh 'poori fees na de sakne wale bachchon ko nahi lete' aur Right to Education 'sirf government schools par laagu hota hai'. Woh poochte hain ki kuch kiya ja sakta hai ya nahi."
+    },
+    question: {
+      en: "What is the correct constitutional position?",
+      hi: "सही संवैधानिक स्थिति क्या है?",
+      hinglish: "Sahi constitutional position kya hai?"
+    },
+    choices: [
+      {
+        correct: false,
+        text: {
+          en: "\u201cArticle 21A applies only to government schools, so the private school is free to refuse.\u201d",
+          hi: "\u201cअनुच्छेद 21A केवल सरकारी स्कूलों पर लागू होता है, इसलिए निजी स्कूल मना करने को स्वतंत्र है।\u201d",
+          hinglish: "\u201cArticle 21A sirf government schools par laagu hota hai, isliye private school mana karne ko free hai.\u201d"
+        },
+        explain: {
+          en: "This is the claim the school wants you to believe, and it is wrong. Article 21A makes free and compulsory education a fundamental right for all children aged 6–14. Parliament's Right to Education Act, 2009 implements it and places duties on private unaided schools too — most importantly, admitting children from weaker and disadvantaged sections to at least 25% of Class I seats, with the State reimbursing the fee.",
+          hi: "यही दावा स्कूल आपसे मनवाना चाहता है, और यह ग़लत है। अनुच्छेद 21A 6 से 14 वर्ष के सभी बच्चों के लिए निःशुल्क और अनिवार्य शिक्षा को मूल अधिकार बनाता है। संसद का शिक्षा का अधिकार अधिनियम, 2009 इसे लागू करता है और निजी (सहायता-रहित) स्कूलों पर भी कर्तव्य डालता है — सबसे महत्वपूर्ण, कमज़ोर और वंचित वर्गों के बच्चों को कक्षा I की कम से कम 25% सीटों पर प्रवेश देना, जिसकी फ़ीस राज्य वापस करता है।",
+          hinglish: "Yahi claim school aapse manwana chahta hai, aur yeh galat hai. Article 21A 6 se 14 saal ke sabhi bachchon ke liye free aur compulsory education ko fundamental right banata hai. Parliament ka Right to Education Act, 2009 ise laagu karta hai aur private (unaided) schools par bhi duties daalta hai — sabse important, weaker aur disadvantaged sections ke bachchon ko Class I ki kam se kam 25% seats par admission dena, jiski fees State wapas karta hai."
+        }
+      },
+      {
+        correct: true,
+        text: {
+          en: "\u201cArticle 21A makes free and compulsory education a fundamental right for children aged 6\u201314, and the RTE Act requires unaided private schools to reserve 25% of seats for weaker and disadvantaged children. Help Arjun's father approach the school and the education department.\u201d",
+          hi: "\u201cअनुच्छेद 21A 6–14 वर्ष के बच्चों के लिए निःशुल्क और अनिवार्य शिक्षा को मूल अधिकार बनाता है, और आरटीई अधिनियम सहायता-रहित निजी स्कूलों के लिए 25% सीटें कमज़ोर और वंचित बच्चों हेतु आरक्षित करना अनिवार्य करता है। अर्जुन के पिता को स्कूल और शिक्षा विभाग तक पहुँचने में मदद कीजिए।\u201d",
+          hinglish: "\u201cArticle 21A 6–14 saal ke bachchon ke liye free aur compulsory education ko fundamental right banata hai, aur RTE Act unaided private schools ke liye 25% seats weaker aur disadvantaged bachchon ke liye reserve karna zaroori karta hai. Arjun ke papa ko school aur education department tak pahunchne mein madad karo.\u201d"
+        },
+        explain: {
+          en: "Correct. Article 21A, inserted by the 86th Constitutional Amendment (2002), guarantees free and compulsory education to every child aged 6–14 as a fundamental right. The RTE Act, 2009 gives it effect, and Section 12(1)(c) requires unaided private schools to admit children from weaker and disadvantaged sections to at least 25% of Class I seats. Denying such a child admission is not a private commercial choice — it is a breach of a fundamental right, enforceable in court.",
+          hi: "सही। 86वें संविधान संशोधन (2002) द्वारा जोड़ा गया अनुच्छेद 21A प्रत्येक 6–14 वर्ष के बच्चे को निःशुल्क और अनिवार्य शिक्षा मूल अधिकार के रूप में देता है। आरटीई अधिनियम, 2009 इसे प्रभावी बनाता है, और धारा 12(1)(c) सहायता-रहित निजी स्कूलों को कक्षा I की कम से कम 25% सीटों पर कमज़ोर और वंचित वर्गों के बच्चों को प्रवेश देने का दायित्व देती है। ऐसे बच्चे को प्रवेश से मना करना निजी व्यापारिक विकल्प नहीं, बल्कि मूल अधिकार का उल्लंघन है, जिसे न्यायालय में लागू कराया जा सकता है।",
+          hinglish: "Sahi. 86th Constitutional Amendment (2002) se joda gaya Article 21A har 6–14 saal ke bachche ko free aur compulsory education fundamental right ke roop mein deta hai. RTE Act, 2009 ise effect deta hai, aur Section 12(1)(c) unaided private schools ko Class I ki kam se kam 25% seats par weaker aur disadvantaged sections ke bachchon ko admission dene ka dayitva deti hai. Aise bachche ko admission se mana karna private commercial choice nahi, balki fundamental right ka ullanghan hai, jise court mein laagu karaya ja sakta hai."
+        }
+      },
+      {
+        correct: false,
+        text: {
+          en: "\u201cEducation is only a Directive Principle, so it cannot be enforced in court.\u201d",
+          hi: "\u201cशिक्षा केवल एक नीति-निदेशक तत्व है, इसलिए इसे न्यायालय में लागू नहीं कराया जा सकता।\u201d",
+          hinglish: "\u201cEducation sirf ek Directive Principle hai, isliye ise court mein laagu nahi karaya ja sakta.\u201d"
+        },
+        explain: {
+          en: "Out of date. Education for children aged 6–14 is now a fundamental right under Article 21A, not merely a Directive Principle. (Article 45, a Directive Principle, still asks the State to provide early childhood care and education for children below six.) Fundamental rights are enforceable — Article 32 lets a person move the Supreme Court directly.",
+          hi: "यह पुरानी बात है। 6–14 वर्ष के बच्चों की शिक्षा अब अनुच्छेद 21A के तहत मूल अधिकार है, केवल नीति-निदेशक तत्व नहीं। (अनुच्छेद 45, एक नीति-निदेशक तत्व, राज्य से छह वर्ष से कम बच्चों के लिए प्रारंभिक बाल्यकाल देखभाल और शिक्षा का प्रावधान माँगता है।) मूल अधिकार लागू करने योग्य हैं — अनुच्छेद 32 व्यक्ति को सीधे उच्चतम न्यायालय जाने देता है।",
+          hinglish: "Yeh purani baat hai. 6–14 saal ke bachchon ki shiksha ab Article 21A ke tahat fundamental right hai, sirf Directive Principle nahi. (Article 45, ek Directive Principle, State se chhe saal se kam bachchon ke liye early childhood care aur education maangta hai.) Fundamental rights enforceable hain — Article 32 person ko seedhe Supreme Court jaane deta hai."
+        }
+      }
+    ],
+    principle: {
+      en: "Right to education as a fundamental right; duties on the State and on private schools.",
+      hi: "शिक्षा का अधिकार मूल अधिकार के रूप में; राज्य और निजी स्कूलों पर कर्तव्य।",
+      hinglish: "Education ka adhikaar fundamental right ke roop mein; State aur private schools par duties."
+    },
+    reasoning: {
+      en: "Article 21A is a fundamental right, enforceable under Article 32. Before the 86th Amendment, the Supreme Court had already read the right to education into Article 21 (the right to life) in Unni Krishnan. The RTE Act supplies the mechanism — and, importantly, defines the private school's obligation.",
+      hi: "अनुच्छेद 21A एक मूल अधिकार है, जिसे अनुच्छेद 32 के तहत लागू कराया जा सकता है। 86वें संशोधन से पहले ही उच्चतम न्यायालय ने उन्नी कृष्णन में शिक्षा के अधिकार को अनुच्छेद 21 (जीवन के अधिकार) में शामिल मान लिया था। आरटीई अधिनियम इसकी कार्यप्रणाली देता है — और महत्वपूर्ण रूप से निजी स्कूल का दायित्व भी तय करता है।",
+      hinglish: "Article 21A ek fundamental right hai, jise Article 32 ke tahat laagu karaya ja sakta hai. 86th Amendment se pehle hi Supreme Court ne Unni Krishnan mein education ke adhikaar ko Article 21 (right to life) mein shaamil maan liya tha. RTE Act iska mechanism deta hai — aur importantly, private school ka obligation bhi tay karta hai."
+    },
+    caseNote: {
+      en: "Unni Krishnan v. State of A.P. (1993) recognised education as part of Article 21. In Pramati Educational & Cultural Trust v. Union of India (2014) the 25% EWS obligation was upheld for unaided private schools, with a limited exemption for unaided minority institutions under Articles 29–30.",
+      hi: "उन्नी कृष्णन बनाम आंध्र प्रदेश राज्य (1993) ने शिक्षा को अनुच्छेद 21 का हिस्सा माना। प्रमाति एजुकेशनल एंड कल्चरल ट्रस्ट बनाम भारत संघ (2014) में सहायता-रहित निजी स्कूलों के लिए 25% ईडब्ल्यूएस दायित्व बरकरार रखा गया, पर अनुच्छेद 29–30 के तहत अल्पसंख्यक संस्थानों के लिए सीमित छूट दी गई।",
+      hinglish: "Unni Krishnan v. State of A.P. (1993) ne education ko Article 21 ka hissa maana. Pramati Educational & Cultural Trust v. Union of India (2014) mein unaided private schools ke liye 25% EWS obligation barkaraar rakha gaya, par Articles 29–30 ke tahat minority institutions ke liye limited chhoot di gayi."
+    },
+    sources: [
+      "Constitution of India, Article 21A (86th Constitutional Amendment, 2002) — legislative.gov.in",
+      "Right of Children to Free and Compulsory Education Act, 2009 (Sections 3, 12(1)(c))",
+      "Unni Krishnan v. State of A.P., (1993) 1 SCC 645",
+      "Pramati Educational & Cultural Trust v. Union of India, (2014) 8 SCC 1"
+    ]
+  },
+
+  /* ------------------------------------------------------------------ 4 */
+  {
+    id: 4,
+    num: "04",
+    theme: "saffron",
+    title: {
+      en: "The Poisoned Well",
+      hi: "ज़हरीला कुआँ",
+      hinglish: "Zeherila Kuan"
+    },
+    subtitle: {
+      en: "The right to constitutional remedies",
+      hi: "संवैधानिक उपचारों का अधिकार",
+      hinglish: "Constitutional remedies ka adhikaar"
+    },
+    article: "Article 32 (and Article 226)",
+    badge: { en: "Seeker of Justice", hi: "न्याय का पथिक", hinglish: "Seeker of Justice" },
+    brief: {
+      en: "You volunteer with a village committee. A chemical factory has been discharging waste into the stream that feeds the village well, and children are falling sick. The factory ignores letters, the local body does nothing, and an FIR you helped file has not moved. A panchayat member says, \u201cWe are small people; only the police and rich people can go to court.\u201d",
+      hi: "आप एक गाँव की समिति के साथ स्वयंसेवा करते हैं। एक रसायन कारख़ाना उस नदी-नाले में कचरा बहा रहा है जो गाँव के कुएँ को पानी देता है, और बच्चे बीमार पड़ रहे हैं। कारख़ाना चिट्ठियों की अनदेखी करता है, स्थानीय निकाय कुछ नहीं करता, और आपकी मदद से दर्ज एफ़आईआर आगे नहीं बढ़ी। एक पंचायत सदस्य कहते हैं, \u201cहम छोटे लोग हैं; अदालत केवल पुलिस और अमीर लोग ही जा सकते हैं।\u201d",
+      hinglish: "Aap ek gaon ki committee ke saath volunteer karte ho. Ek chemical factory us nadi-naale mein kachra baha raha hai jo gaon ke kuen ko paani deta hai, aur bachche beemar pad rahe hain. Factory chitthiyon ki andekhi karta hai, local body kuch nahi karta, aur aapki madad se darj FIR aage nahi badhi. Ek panchayat member kehte hain, \u201cHum chhote log hain; court sirf police aur ameer log hi ja sakte hain.\u201d"
+    },
+    question: {
+      en: "What is the strongest constitutional route?",
+      hi: "सबसे मज़बूत संवैधानिक रास्ता क्या है?",
+      hinglish: "Sabse strong constitutional raasta kya hai?"
+    },
+    choices: [
+      {
+        correct: false,
+        text: {
+          en: "\u201cWait for the next election and vote the local body out.\u201d",
+          hi: "\u201cअगले चुनाव का इंतज़ार करो और स्थानीय निकाय को हरा दो।\u201d",
+          hinglish: "\u201cAgle election ka intezaar karo aur local body ko hara do.\u201d"
+        },
+        explain: {
+          en: "Voting matters, but it is not a remedy for an ongoing violation of a fundamental right. Children are getting sick now. The Constitution provides a direct route: Article 32 lets a person move the Supreme Court for enforcement of fundamental rights, and Article 226 lets them move a High Court. A right without a remedy is only a promise.",
+          hi: "मतदान महत्वपूर्ण है, पर चल रहे मूल अधिकार उल्लंघन का यह उपाय नहीं है। बच्चे अभी बीमार पड़ रहे हैं। संविधान सीधा रास्ता देता है: अनुच्छेद 32 व्यक्ति को मूल अधिकारों के प्रवर्तन हेतु उच्चतम न्यायालय जाने देता है, और अनुच्छेद 226 उच्च न्यायालय जाने देता है। बिना उपाय का अधिकार केवल एक वादा है।",
+          hinglish: "Voting important hai, par chal rahe fundamental right violation ka yeh remedy nahi hai. Bachche abhi beemar pad rahe hain. Samvidhan seedha raasta deta hai: Article 32 person ko fundamental rights ke enforcement ke liye Supreme Court jaane deta hai, aur Article 226 High Court jaane deta hai. Bina remedy ka adhikaar sirf ek vaada hai."
+        }
+      },
+      {
+        correct: true,
+        text: {
+          en: "\u201cMove the Supreme Court under Article 32 for a writ \u2014 for example mandamus directing the authorities to act, or to protect the right to life and health under Article 21. Article 32 is itself a fundamental right.\u201d",
+          hi: "\u201cअनुच्छेद 32 के तहत उच्चतम न्यायालय में रिट याचिका दायर करें — जैसे मंडामस, जो अधिकारियों को कार्रवाई का आदेश दे, या अनुच्छेद 21 के तहत जीवन और स्वास्थ्य के अधिकार की रक्षा करे। अनुच्छेद 32 स्वयं एक मूल अधिकार है।\u201d",
+          hinglish: "\u201cArticle 32 ke tahat Supreme Court mein writ petition daayar karein — jaise mandamus, jo authorities ko action ka order de, ya Article 21 ke tahat right to life aur health ki raksha kare. Article 32 khud ek fundamental right hai.\u201d"
+        },
+        explain: {
+          en: "Correct. Article 32 guarantees the right to move the Supreme Court directly for the enforcement of fundamental rights, and it is itself a fundamental right. The Court can issue five writs: habeas corpus, mandamus, prohibition, quo warranto and certiorari. Polluting a village's water violates the right to life and health under Article 21, and a writ of mandamus can order the authorities to act. Article 226 gives the High Courts similar — and in some respects wider — powers. Dr B.R. Ambedkar called Article 32 'the very soul of the Constitution and the very heart of it'.",
+          hi: "सही। अनुच्छेद 32 मूल अधिकारों के प्रवर्तन के लिए सीधे उच्चतम न्यायालय जाने का अधिकार देता है, और यह स्वयं एक मूल अधिकार है। न्यायालय पाँच रिट जारी कर सकता है: बंदी प्रत्यक्षीकरण, परमादेश (मंडामस), प्रतिषेध, अधिकार-पृच्छा और उत्प्रेषण। गाँव का पानी दूषित करना अनुच्छेद 21 के तहत जीवन और स्वास्थ्य के अधिकार का उल्लंघन है, और परमादेश रिट अधिकारियों को कार्रवाई का आदेश दे सकती है। अनुच्छेद 226 उच्च न्यायालयों को समान — और कुछ मामलों में व्यापक — शक्तियाँ देता है। डॉ. भीमराव आंबेडकर ने अनुच्छेद 32 को 'संविधान की आत्मा और उसका हृदय' कहा था।",
+          hinglish: "Sahi. Article 32 fundamental rights ke enforcement ke liye seedhe Supreme Court jaane ka adhikaar deta hai, aur yeh khud ek fundamental right hai. Court paanch writs issue kar sakta hai: habeas corpus, mandamus, prohibition, quo warranto aur certiorari. Gaon ka paani dooshit karna Article 21 ke tahat right to life aur health ka ullanghan hai, aur mandamus writ authorities ko action ka order de sakti hai. Article 226 High Courts ko same — aur kuch maamlon mein wider — powers deta hai. Dr B.R. Ambedkar ne Article 32 ko 'Samvidhan ki aatma aur uska hriday' kaha tha."
+        }
+      },
+      {
+        correct: false,
+        text: {
+          en: "\u201cOnly the directly affected person can approach the court, so a collective effort is pointless.\u201d",
+          hi: "\u201cकेवल सीधे प्रभावित व्यक्ति ही अदालत जा सकता है, इसलिए सामूहिक प्रयास व्यर्थ है।\u201d",
+          hinglish: "\u201cSirf directly affected person hi court ja sakta hai, isliye collective effort bekaar hai.\u201d"
+        },
+        explain: {
+          en: "This rule was relaxed long ago. Under public interest litigation (PIL), the Supreme Court and High Courts allow any public-spirited person or organisation to approach them where a fundamental right of a group is violated and the affected people cannot easily reach the courts themselves. The Supreme Court relaxed standing in S.P. Gupta (1981).",
+          hi: "यह नियम बहुत पहले शिथिल कर दिया गया। जनहित याचिका (पीआईएल) के तहत उच्चतम और उच्च न्यायालय किसी भी लोक-भावना वाले व्यक्ति या संगठन को याचिका दायर करने देते हैं, जब किसी समूह के मूल अधिकार का उल्लंघन हो और प्रभावित लोग स्वयं अदालत तक आसानी से न पहुँच सकें। उच्चतम न्यायालय ने एस.पी. गुप्ता (1981) में वादकारी की शर्त शिथिल की।",
+          hinglish: "Yeh rule bahut pehle relax kar diya gaya. Public interest litigation (PIL) ke tahat Supreme Court aur High Courts kisi bhi public-spirited person ya organisation ko petition dene dete hain, jab kisi group ke fundamental right ka ullanghan ho aur affected log khud court tak aasani se na pahunch sakein. Supreme Court ne S.P. Gupta (1981) mein standing relax ki."
+        }
+      }
+    ],
+    principle: {
+      en: "Right to constitutional remedies; judicial review; writ jurisdiction.",
+      hi: "संवैधानिक उपचारों का अधिकार; न्यायिक पुनरावलोकन; रिट क्षेत्राधिकार।",
+      hinglish: "Constitutional remedies ka adhikaar; judicial review; writ jurisdiction."
+    },
+    reasoning: {
+      en: "A right with no remedy is only a promise. Article 32 lets any person — not only the directly aggrieved — approach the Supreme Court in the public interest where a fundamental right is violated. Article 226 gives High Courts a parallel and, in some respects, broader jurisdiction.",
+      hi: "बिना उपाय का अधिकार केवल एक वादा है। अनुच्छेद 32 किसी भी व्यक्ति को — केवल सीधे पीड़ित को नहीं — जनहित में उच्चतम न्यायालय जाने देता है, जब मूल अधिकार का उल्लंघन हो। अनुच्छेद 226 उच्च न्यायालयों को समानांतर और कुछ दृष्टियों से व्यापक क्षेत्राधिकार देता है।",
+      hinglish: "Bina remedy ka adhikaar sirf ek vaada hai. Article 32 kisi bhi person ko — sirf directly peedit ko nahi — public interest mein Supreme Court jaane deta hai, jab fundamental right ka ullanghan ho. Article 226 High Courts ko parallel aur kuch nazariyon se broader jurisdiction deta hai."
+    },
+    caseNote: {
+      en: "M.C. Mehta v. Union of India (1987) built environmental jurisprudence on Articles 21 and 32, holding that the right to life includes the right to a healthy environment. S.P. Gupta v. Union of India (1981) expanded locus standi to allow public interest litigation.",
+      hi: "एम.सी. मेहता बनाम भारत संघ (1987) ने अनुच्छेद 21 और 32 पर पर्यावरणीय न्यायशास्त्र खड़ा किया, और माना कि जीवन के अधिकार में स्वस्थ पर्यावरण का अधिकार शामिल है। एस.पी. गुप्ता बनाम भारत संघ (1981) ने वादकारी की शर्त बढ़ाकर जनहित याचिका को संभव बनाया।",
+      hinglish: "M.C. Mehta v. Union of India (1987) ne Articles 21 aur 32 par environmental jurisprudence khada kiya, aur maana ki right to life mein healthy environment ka adhikaar shaamil hai. S.P. Gupta v. Union of India (1981) ne locus standi badha kar PIL ko possible banaya."
+    },
+    sources: [
+      "Constitution of India, Articles 32 and 226 — legislative.gov.in",
+      "M.C. Mehta v. Union of India, (1987) 1 SCC 395",
+      "S.P. Gupta v. Union of India, AIR 1982 SC 149",
+      "Vellore Citizens' Welfare Forum v. Union of India, (1996) 5 SCC 647"
+    ]
+  },
+
+  /* ------------------------------------------------------------------ 5 */
+  {
+    id: 5,
+    num: "05",
+    theme: "emerald",
+    title: {
+      en: "The Torch and the Toll Plaza",
+      hi: "मशाल और टोल प्लाज़ा",
+      hinglish: "Mashal aur Toll Plaza"
+    },
+    subtitle: {
+      en: "Fundamental duties of citizens",
+      hi: "नागरिकों के मूल कर्तव्य",
+      hinglish: "Naagrikon ke mool kartavya"
+    },
+    article: "Article 51A",
+    badge: { en: "Duty Bound", hi: "कर्तव्यनिष्ठ", hinglish: "Duty Bound" },
+    brief: {
+      en: "During a heated protest about a new toll, a group decides to burn an effigy and then to stone buses and set fire to a public bus shelter. Someone shouts, \u201cThis is our right to protest \u2014 the Constitution protects us!\u201d A friend turns to you and asks whether he is right.",
+      hi: "एक नए टोल के ख़िलाफ़ गरमा-गरम विरोध-प्रदर्शन के दौरान एक समूह पुतला जलाने और फिर बसों पर पथराव तथा सार्वजनिक बस-शेल्टर में आग लगाने का फ़ैसला करता है। कोई चिल्लाता है, \u201cयह हमारा विरोध का अधिकार है — संविधान हमारी रक्षा करता है!\u201d आपका मित्र आपसे पूछता है कि क्या वह सही है।",
+      hinglish: "Ek naye toll ke khilaaf garam protest ke dauraan ek group putla jalane aur phir buses par pathraav tatha public bus shelter mein aag lagane ka faisla karta hai. Koi chillata hai, \u201cYeh hamara protest ka adhikaar hai — Samvidhan hamari raksha karta hai!\u201d Aapka dost aapse poochta hai ki kya woh sahi hai."
+    },
+    question: {
+      en: "What is the balanced, constitutionally accurate response?",
+      hi: "संतुलित और संवैधानिक रूप से सही उत्तर क्या है?",
+      hinglish: "Balanced aur constitutionally sahi jawab kya hai?"
+    },
+    choices: [
+      {
+        correct: false,
+        text: {
+          en: "\u201cYes \u2014 protesting is a fundamental right, and it has no limits at all.\u201d",
+          hi: "\u201cहाँ — विरोध करना मूल अधिकार है, और उस पर कोई सीमा नहीं है।\u201d",
+          hinglish: "\u201cHaan — protest karna fundamental right hai, aur uspar koi limit nahi hai.\u201d"
+        },
+        explain: {
+          en: "No freedom is absolute. The right to assemble peacefully and to speak freely (Article 19(1)(a) and (b)) is subject to reasonable restrictions under Articles 19(2) and 19(3), including in the interest of public order. Violence, arson and destruction of public property fall outside the protection of Article 19 altogether — they are crimes, not protest.",
+          hi: "कोई भी स्वतंत्रता निरपेक्ष नहीं है। शांतिपूर्वक एकत्र होने और स्वतंत्र रूप से बोलने का अधिकार (अनुच्छेद 19(1)(a) और (b)) अनुच्छेद 19(2) और 19(3) के तहत उचित प्रतिबंधों के अधीन है, जिसमें लोक व्यवस्था का हित भी शामिल है। हिंसा, आगज़नी और सार्वजनिक संपत्ति का विनाश अनुच्छेद 19 के संरक्षण से पूरी तरह बाहर हैं — वे अपराध हैं, विरोध नहीं।",
+          hinglish: "Koi bhi azaadi absolute nahi hai. Shantipoorvak ikattha hone aur khul kar bolne ka adhikaar (Article 19(1)(a) aur (b)) Articles 19(2) aur 19(3) ke tahat reasonable restrictions ke adheen hai, jisme public order ka hit bhi shaamil hai. Violence, aagzani aur public property ka vinaash Article 19 ke protection se poori tarah bahar hain — woh crimes hain, protest nahi."
+        }
+      },
+      {
+        correct: true,
+        text: {
+          en: "\u201cNo. Protest is protected under Article 19(1)(a) and (b), but subject to reasonable restrictions under Articles 19(2) and 19(3), including public order. Article 51A also makes it a fundamental duty of every citizen to protect public property and to abjure violence.\u201d",
+          hi: "\u201cनहीं। विरोध अनुच्छेद 19(1)(a) और (b) के तहत संरक्षित है, पर अनुच्छेद 19(2) और 19(3) के उचित प्रतिबंधों के अधीन, जिसमें लोक व्यवस्था शामिल है। अनुच्छेद 51A प्रत्येक नागरिक का यह मूल कर्तव्य भी बनाता है कि वह सार्वजनिक संपत्ति की रक्षा करे और हिंसा से दूर रहे।\u201d",
+          hinglish: "\u201cNahi. Protest Article 19(1)(a) aur (b) ke tahat protected hai, par Articles 19(2) aur 19(3) ke reasonable restrictions ke adheen, jisme public order shaamil hai. Article 51A har naagrik ka yeh fundamental duty bhi banata hai ki woh public property ki raksha kare aur violence se door rahe.\u201d"
+        },
+        explain: {
+          en: "Correct, and the balanced answer. Article 19(1)(a) and (b) protect free speech and peaceful assembly, but Articles 19(2) and 19(3) allow reasonable restrictions, including for public order. Article 51A, added by the 42nd Amendment (1976), lists the fundamental duties of citizens — including respecting the Constitution, promoting harmony, and, under Article 51A(i), protecting public property and abjuring violence. So the protest itself is lawful; burning property and stoning buses is not.",
+          hi: "सही, और संतुलित उत्तर। अनुच्छेद 19(1)(a) और (b) स्वतंत्र अभिव्यक्ति और शांतिपूर्ण सभा की रक्षा करते हैं, पर अनुच्छेद 19(2) और 19(3) उचित प्रतिबंध की अनुमति देते हैं, जिसमें लोक व्यवस्था भी शामिल है। 42वें संशोधन (1976) द्वारा जोड़ा गया अनुच्छेद 51A नागरिकों के मूल कर्तव्य गिनाता है — संविधान का सम्मान, सद्भाव बढ़ाना, और अनुच्छेद 51A(i) के तहत सार्वजनिक संपत्ति की रक्षा तथा हिंसा का त्याग। अतः विरोध स्वयं वैध है; संपत्ति जलाना और बसों पर पथराव करना नहीं।",
+          hinglish: "Sahi, aur balanced jawab. Article 19(1)(a) aur (b) free speech aur peaceful assembly ki raksha karte hain, par Articles 19(2) aur 19(3) reasonable restrictions ki permission dete hain, jisme public order bhi shaamil hai. 42nd Amendment (1976) se joda gaya Article 51A naagrikon ke fundamental duties ginta hai — Samvidhan ka samman, harmony badhana, aur Article 51A(i) ke tahat public property ki raksha tatha violence ka tyaag. Isliye protest khud valid hai; property jalana aur buses par pathraav karna nahi."
+        }
+      },
+      {
+        correct: false,
+        text: {
+          en: "\u201cFundamental duties in Article 51A are not enforceable in court, so they mean nothing and can be ignored.\u201d",
+          hi: "\u201cअनुच्छेद 51A के मूल कर्तव्य न्यायालय में लागू नहीं कराए जा सकते, इसलिए वे कुछ मायने नहीं रखते और उन्हें नज़रअंदाज़ किया जा सकता है।\u201d",
+          hinglish: "\u201cArticle 51A ke fundamental duties court mein laagu nahi karaye ja sakte, isliye woh kuch matlab nahi rakhte aur ignore kiye ja sakte hain.\u201d"
+        },
+        explain: {
+          en: "Partly true, wholly misleading. Fundamental duties are indeed not directly enforceable by a writ, unlike fundamental rights. But they are constitutional obligations and constitutional standards: courts refer to them while interpreting statutes, and they shape what a lawful protest looks like. More directly, arson and destruction of public property are offences under ordinary criminal law regardless of Article 51A.",
+          hi: "आधा सच, पूरी तरह भ्रामक। मूल कर्तव्य मूल अधिकारों की तरह सीधे रिट द्वारा लागू नहीं कराए जा सकते — यह सच है। पर वे संवैधानिक दायित्व और संवैधानिक मानक हैं: न्यायालय विधियों की व्याख्या करते समय इनका सहारा लेते हैं, और ये तय करते हैं कि वैध विरोध कैसा दिखता है। इससे भी सीधे, आगज़नी और सार्वजनिक संपत्ति का विनाश अनुच्छेद 51A से स्वतंत्र रूप से सामान्य दंड विधि के अंतर्गत अपराध हैं।",
+          hinglish: "Aadha sach, poori tarah misleading. Fundamental duties fundamental rights ki tarah seedhe writ se laagu nahi karaye ja sakte — yeh sach hai. Par woh constitutional obligations aur standards hain: courts kanoon ki vyakhya karte waqt inka sahara lete hain, aur yeh tay karte hain ki valid protest kaisa dikhta hai. Isse bhi seedha, aagzani aur public property ka vinaash Article 51A se independent roop se normal criminal law ke tahat offences hain."
+        }
+      }
+    ],
+    principle: {
+      en: "Fundamental duties of citizens; limits on assembly and expression.",
+      hi: "नागरिकों के मूल कर्तव्य; सभा और अभिव्यक्ति की सीमाएँ।",
+      hinglish: "Naagrikon ke fundamental duties; assembly aur expression ki limits."
+    },
+    reasoning: {
+      en: "Rights and duties are two sides of citizenship. Article 51A does not create enforceable claims, but it shapes what a lawful protest looks like — peaceful, non-violent, and respectful of public property. Courts have treated the duties as constitutional standards that inform how other laws are read.",
+      hi: "अधिकार और कर्तव्य नागरिकता के दो पहलू हैं। अनुच्छेद 51A लागू करने योग्य दावे नहीं बनाता, पर तय करता है कि वैध विरोध कैसा दिखता है — शांतिपूर्ण, अहिंसक, और सार्वजनिक संपत्ति का सम्मान करने वाला। न्यायालयों ने इन कर्तव्यों को संवैधानिक मानक माना है जो अन्य विधियों की व्याख्या को दिशा देते हैं।",
+      hinglish: "Adhikaar aur kartavya naagrikta ke do pehlu hain. Article 51A enforceable claims nahi banata, par tay karta hai ki valid protest kaisa dikhta hai — shaant, ahimsak, aur public property ka sammaan karne wala. Courts ne in duties ko constitutional standards maana hai jo doosre kanoonon ki vyakhya ko direction dete hain."
+    },
+    caseNote: {
+      en: "In AIIMS Students' Union v. AIIMS (2001) the Supreme Court observed that fundamental duties are equally important as fundamental rights and can be used as an aid to interpret statutes. Destruction of public property has repeatedly been held to fall outside the protection of Article 19.",
+      hi: "एम्स स्टूडेंट्स यूनियन बनाम एम्स (2001) में उच्चतम न्यायालय ने कहा कि मूल कर्तव्य मूल अधिकारों के समान ही महत्वपूर्ण हैं और विधियों की व्याख्या में सहायक हो सकते हैं। सार्वजनिक संपत्ति का विनाश बार-बार अनुच्छेद 19 के संरक्षण से बाहर माना गया है।",
+      hinglish: "AIIMS Students' Union v. AIIMS (2001) mein Supreme Court ne kaha ki fundamental duties fundamental rights ke samaan hi important hain aur kanoon ki vyakhya mein sahayak ho sakte hain. Public property ka vinaash baar-baar Article 19 ke protection se bahar maana gaya hai."
+    },
+    sources: [
+      "Constitution of India, Articles 19(2), 19(3) and 51A (42nd Amendment, 1976) — legislative.gov.in",
+      "AIIMS Students' Union v. AIIMS, (2001) 8 SCC 266",
+      "Swaran Singh Committee Report (1976) — recommendation on fundamental duties"
+    ]
+  }
+];
+
+/* --------------------------------------------------------------------------
+   Offline Constitution Mentor knowledge base.
+   Keyword-matched, fully client-side. If a Sarvam AI proxy is configured
+   (window.SAMVIDHAN_MENTOR_PROXY) the game will prefer it and fall back here.
+   -------------------------------------------------------------------------- */
+const MENTOR_KB = [
+  {
+    keys: ["14", "equality before law", "samanta", "samanata"],
+    a: {
+      en: "Article 14 guarantees equality before the law and equal protection of the laws to any person within India. It binds the State. It allows reasonable classification, but not arbitrary or discriminatory treatment.",
+      hi: "अनुच्छेद 14 भारत में किसी भी व्यक्ति को विधि के समक्ष समानता और विधियों के समान संरक्षण देता है। यह राज्य को बाध्य करता है। यह उचित वर्गीकरण की अनुमति देता है, पर मनमाने या भेदभावपूर्ण व्यवहार की नहीं।",
+      hinglish: "Article 14 India mein kisi bhi person ko kanoon ke saamne samanata aur kanoon ke samaan sanrakshan deta hai. Yeh State ko bandhta hai. Yeh reasonable classification ki permission deta hai, par arbitrary ya discriminatory treatment ki nahi."
+    }
+  },
+  {
+    keys: ["15", "discrimination", "bhedbhav", "bhedbhaav", "untouchability", "17"],
+    a: {
+      en: "Article 15(1) bars the State from discriminating on grounds of religion, race, caste, sex or place of birth. Article 15(2) extends this to shops, public restaurants, hotels and places of public entertainment. Article 17 abolishes untouchability in any form.",
+      hi: "अनुच्छेद 15(1) राज्य को धर्म, नस्ल, जाति, लिंग या जन्म-स्थान के आधार पर भेदभाव से रोकता है। अनुच्छेद 15(2) इसे दुकानों, सार्वजनिक भोजनालयों, होटलों और सार्वजनिक मनोरंजन-स्थलों तक बढ़ाता है। अनुच्छेद 17 किसी भी रूप में अस्पृश्यता को समाप्त करता है।",
+      hinglish: "Article 15(1) State ko dharm, race, jaati, ling ya janm-sthaan ke aadhaar par bhedbhaav se rokta hai. Article 15(2) ise dukaano, public restaurants, hotels aur public entertainment places tak badhata hai. Article 17 kisi bhi roop mein untouchability ko khatam karta hai."
+    }
+  },
+  {
+    keys: ["19", "speech", "expression", "free speech", "bolne", "abhi", "satire", "sedition", "124a"],
+    a: {
+      en: "Article 19(1)(a) protects freedom of speech and expression. Article 19(2) allows reasonable restrictions on listed grounds — including security of the State, public order, decency, defamation and incitement. Restrictions must be by law, reasonable, and within those grounds. Sedition requires incitement to violence, not mere criticism.",
+      hi: "अनुच्छेद 19(1)(a) बोलने और अभिव्यक्ति की स्वतंत्रता की रक्षा करता है। अनुच्छेद 19(2) सूचीबद्ध आधारों पर उचित प्रतिबंध की अनुमति देता है — राज्य की सुरक्षा, लोक व्यवस्था, शिष्टाचार, मानहानि और उकसाना शामिल हैं। प्रतिबंध विधि द्वारा, उचित, और इन आधारों के भीतर होने चाहिए। राजद्रोह के लिए हिंसा भड़काना चाहिए, केवल आलोचना नहीं।",
+      hinglish: "Article 19(1)(a) speech aur expression ki azaadi ki raksha karta hai. Article 19(2) listed grounds par reasonable restrictions ki permission deta hai — State ki security, public order, decency, defamation aur incitement shaamil hain. Restrictions kanoon se, reasonable, aur in grounds ke andar hone chahiye. Sedition ke liye violence bhadkana chahiye, sirf aalochana nahi."
+    }
+  },
+  {
+    keys: ["21a", "education", "shiksha", "school", "rte", "25%"],
+    a: {
+      en: "Article 21A makes free and compulsory education a fundamental right for children aged 6 to 14. The RTE Act, 2009 implements it, including a 25% admission obligation on unaided private schools for weaker and disadvantaged children (Section 12(1)(c)).",
+      hi: "अनुच्छेद 21A 6 से 14 वर्ष के बच्चों के लिए निःशुल्क और अनिवार्य शिक्षा को मूल अधिकार बनाता है। आरटीई अधिनियम, 2009 इसे लागू करता है, जिसमें सहायता-रहित निजी स्कूलों पर कमज़ोर और वंचित बच्चों हेतु 25% प्रवेश का दायित्व (धारा 12(1)(c)) शामिल है।",
+      hinglish: "Article 21A 6 se 14 saal ke bachchon ke liye free aur compulsory education ko fundamental right banata hai. RTE Act, 2009 ise laagu karta hai, jisme unaided private schools par weaker aur disadvantaged bachchon ke liye 25% admission ka obligation (Section 12(1)(c)) shaamil hai."
+    }
+  },
+  {
+    keys: ["32", "writ", "remedy", "upchar", "remedies", "supreme court", "mandamus", "habeas"],
+    a: {
+      en: "Article 32 gives every person the right to move the Supreme Court directly to enforce fundamental rights; it is itself a fundamental right. The Court may issue writs — habeas corpus, mandamus, prohibition, quo warranto and certiorari. Article 226 gives High Courts similar powers.",
+      hi: "अनुच्छेद 32 प्रत्येक व्यक्ति को मूल अधिकारों के प्रवर्तन हेतु सीधे उच्चतम न्यायालय जाने का अधिकार देता है; यह स्वयं एक मूल अधिकार है। न्यायालय रिट जारी कर सकता है — बंदी प्रत्यक्षीकरण, परमादेश, प्रतिषेध, अधिकार-पृच्छा और उत्प्रेषण। अनुच्छेद 226 उच्च न्यायालयों को समान शक्तियाँ देता है।",
+      hinglish: "Article 32 har person ko fundamental rights ke enforcement ke liye seedhe Supreme Court jaane ka adhikaar deta hai; yeh khud ek fundamental right hai. Court writs issue kar sakta hai — habeas corpus, mandamus, prohibition, quo warranto aur certiorari. Article 226 High Courts ko same powers deta hai."
+    }
+  },
+  {
+    keys: ["51a", "duties", "duty", "kartavya", "fundamental duties"],
+    a: {
+      en: "Article 51A lists eleven fundamental duties of citizens — including respecting the Constitution, promoting harmony, protecting public property and abjuring violence (51A(i)). They are not directly enforceable by writ, but courts use them to interpret other laws.",
+      hi: "अनुच्छेद 51A नागरिकों के ग्यारह मूल कर्तव्य गिनाता है — संविधान का सम्मान, सद्भाव बढ़ाना, सार्वजनिक संपत्ति की रक्षा और हिंसा का त्याग (51A(i)) शामिल हैं। ये सीधे रिट द्वारा लागू नहीं होते, पर न्यायालय इनका उपयोग अन्य विधियों की व्याख्या में करते हैं।",
+      hinglish: "Article 51A naagrikon ke gyarah fundamental duties ginta hai — Samvidhan ka samman, harmony badhana, public property ki raksha aur violence ka tyaag (51A(i)) shaamil hain. Yeh seedhe writ se laagu nahi hote, par courts inka use doosre kanoonon ki vyakhya mein karte hain."
+    }
+  },
+  {
+    keys: ["pil", "public interest", "janhit", "locus", "standing"],
+    a: {
+      en: "Public interest litigation (PIL) allows any public-spirited person or organisation to approach the Supreme Court (Article 32) or a High Court (Article 226) where a group's fundamental rights are violated and the affected people cannot easily reach the courts themselves. The Supreme Court relaxed standing in S.P. Gupta (1981).",
+      hi: "जनहित याचिका (पीआईएल) किसी भी लोक-भावना वाले व्यक्ति या संगठन को उच्चतम न्यायालय (अनुच्छेद 32) या उच्च न्यायालय (अनुच्छेद 226) जाने देती है, जब किसी समूह के मूल अधिकार का उल्लंघन हो और प्रभावित लोग स्वयं अदालत तक आसानी से न पहुँच सकें। उच्चतम न्यायालय ने एस.पी. गुप्ता (1981) में यह शर्त शिथिल की।",
+      hinglish: "Public interest litigation (PIL) kisi bhi public-spirited person ya organisation ko Supreme Court (Article 32) ya High Court (Article 226) jaane deti hai, jab kisi group ke fundamental rights ka ullanghan ho aur affected log khud court tak aasani se na pahunch sakein. Supreme Court ne S.P. Gupta (1981) mein yeh condition relax ki."
+    }
+  },
+  {
+    keys: ["dpsp", "directive", "niti", "21", "life", "fundamental rights"],
+    a: {
+      en: "Fundamental rights (Articles 12–35) are enforceable in court. Directive Principles (Articles 36–51) are goals for the State and are not directly enforceable, though courts increasingly read them alongside Article 21. Article 21 — the right to life and personal liberty — has been expanded to include dignity, health and a clean environment.",
+      hi: "मूल अधिकार (अनुच्छेद 12–35) न्यायालय में लागू कराए जा सकते हैं। नीति-निदेशक तत्व (अनुच्छेद 36–51) राज्य के लक्ष्य हैं और सीधे लागू नहीं होते, पर न्यायालय इन्हें अनुच्छेद 21 के साथ पढ़ते जा रहे हैं। अनुच्छेद 21 — जीवन और व्यक्तिगत स्वतंत्रता का अधिकार — में गरिमा, स्वास्थ्य और स्वच्छ पर्यावरण शामिल किए गए हैं।",
+      hinglish: "Fundamental rights (Articles 12–35) court mein laagu karaye ja sakte hain. Directive Principles (Articles 36–51) State ke goals hain aur seedhe laagu nahi hote, par courts inhe Article 21 ke saath padh rahe hain. Article 21 — right to life aur personal liberty — mein dignity, health aur clean environment shaamil kiye gaye hain."
+    }
+  }
+];
+
+</script>
+<script>
+(function(){
+  "use strict";
+  var STORE_KEY = "samvidhan-quest-v1";
+  var MAX_XP = 750;
+
+  var ICONS = {
+    1:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.4v16.2M8.8 20h6.4M12 5.4H6M12 5.4h6M6 5.4 3.4 11.6a2.9 2.9 0 0 0 5.2 0L6 5.4ZM18 5.4l-2.6 6.2a2.9 2.9 0 0 0 5.2 0L18 5.4Z"/></svg>',
+    2:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5a2 2 0 0 1-2 2H8l-4 3.5v-14a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8.5Z"/><path d="M8.5 8.5h7M8.5 11.8h4.5"/></svg>',
+    3:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6.4C10.4 5 8.2 4.4 4.5 4.4v13.2c3.7 0 5.9.6 7.5 2 1.6-1.4 3.8-2 7.5-2V4.4c-3.7 0-5.9.6-7.5 2Z"/><path d="M12 6.4v13.2"/></svg>',
+    4:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20.5h18M12 3 4.5 7.2h15L12 3Z"/><path d="M6.5 7.2v10M11 7.2v10M15.5 7.2v10"/></svg>',
+    5:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20.5s-7.2-4.4-7.2-9.4a4.1 4.1 0 0 1 7.2-2.7 4.1 4.1 0 0 1 7.2 2.7c0 5-7.2 9.4-7.2 9.4Z"/></svg>'
+  };
+  var THEMES = { saffron:'#ff9f2e', emerald:'#12c47f', gold:'#e6c15a' };
+
+  var state = { name:'', lang:'en', xp:0, completed:[], badges:[], attempts:{}, unlocked:1 };
+
+  function $(id){ return document.getElementById(id); }
+  function t(key){ var d = I18N[state.lang] || I18N.en; return (d[key] !== undefined ? d[key] : I18N.en[key]); }
+  function L(obj){ if(!obj) return ''; return obj[state.lang] || obj.en; }
+  function esc(s){ return String(s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+
+  function save(){ try{ localStorage.setItem(STORE_KEY, JSON.stringify(state)); }catch(e){} }
+  function load(){ try{ var r = localStorage.getItem(STORE_KEY); if(r) return JSON.parse(r); }catch(e){} return null; }
+
+  /* ---------------- language + static text ---------------- */
+  function applyLang(){
+    document.body.className = 'lang-' + state.lang;
+    document.documentElement.lang = state.lang === 'hi' ? 'hi' : 'en';
+
+    $('lg-kicker').textContent = 'The Constitution Challenge';
+    $('lg-title').textContent = state.lang === 'hi' ? 'संविधान' : 'SAMVIDHAN';
+    $('lg-title2').textContent = state.lang === 'hi' ? 'क्वेस्ट' : 'QUEST';
+    $('lg-tagline').innerHTML = t('tagline').replace(/\.\s*$/, '.').replace('Play them.','<strong>Play them.</strong>').replace('खेलिए।','<strong>खेलिए।</strong>').replace('khelo.','<strong>khelo.</strong>');
+    $('lg-intro').textContent = t('intro');
+    $('lg-name').textContent = t('enterName');
+    $('nameInput').placeholder = t('namePlaceholder');
+    $('lg-lang').textContent = t('chooseLang');
+    $('lg-start').textContent = t('startAdventure');
+    $('lg-foot').textContent = t('footer');
+
+    $('map-brand').textContent = t('appTitle');
+    $('map-progress').textContent = t('yourProgress');
+    $('map-xp').textContent = t('xp');
+    $('map-missions').textContent = t('missionsDone');
+    $('map-title').textContent = t('mapTitle');
+    $('map-sub').textContent = t('mapSub');
+    $('badge-title').textContent = t('badgesTitle');
+    $('reset-lbl').textContent = t('reset');
+    $('map-foot').textContent = t('disclaimer');
+
+    $('back-lbl').textContent = t('backToMap');
+    $('m-scenario-lbl').textContent = t('scenario');
+    $('mentor-lbl').textContent = t('askMentor');
+    $('minput').placeholder = t('mentorPlaceholder');
+    $('msend').textContent = t('mentorBtn');
+
+    $('v-title').textContent = t('victoryTitle');
+    $('v-sub').textContent = t('victorySub');
+    $('v-score-lbl').textContent = t('certScore');
+    $('v-rank-lbl').textContent = t('certRank');
+    $('v-missions-lbl').textContent = t('missionsDone');
+    $('c-title').textContent = t('certTitle');
+    $('c-line').textContent = t('certLine');
+    $('c-body').textContent = t('certLine2');
+    $('c-rank-k').textContent = t('certRank');
+    $('c-score-k').textContent = t('certScore');
+    $('c-date-k').textContent = t('certDate');
+    $('v-print').textContent = t('printCert');
+    $('v-again').textContent = t('playAgain');
+    $('v-foot').textContent = t('disclaimer');
+    $('c-kicker').textContent = t('appTitle') + ' · The Constitution Challenge';
+    $('c-sub').textContent = L({en:'Guardian of the Constitution', hi:'संविधान का रक्षक', hinglish:'Guardian of the Constitution'});
+
+    document.querySelectorAll('#langrow .langchip').forEach(function(b){ b.setAttribute('aria-pressed', String(b.dataset.lang === state.lang)); });
+    document.querySelectorAll('#minilang button').forEach(function(b){ b.setAttribute('aria-pressed', String(b.dataset.lang === state.lang)); });
+
+    if($('screen-mission').classList.contains('active')) renderMission(curIdx);
+    if($('screen-map').classList.contains('active')) renderMap();
+    if($('screen-victory').classList.contains('active')) renderVictory();
+  }
+
+  /* ---------------- screens ---------------- */
+  function show(id){
+    document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); });
+    $(id).classList.add('active');
+    window.scrollTo({ top:0, behavior:'smooth' });
+  }
+
+  /* ---------------- XP / rank ---------------- */
+  function rankFor(xp){
+    for(var i=0;i<RANKS.length;i++){ if(xp >= RANKS[i].min) return L(RANKS[i].label); }
+    return L(RANKS[RANKS.length-1].label);
+  }
+  function animateNumber(el, to, suffix){
+    var from = parseInt(el.dataset.v || '0', 10) || 0;
+    el.dataset.v = to;
+    var start = null, dur = 750;
+    function step(ts){
+      if(!start) start = ts;
+      var p = Math.min((ts-start)/dur, 1);
+      var eased = 1 - Math.pow(1-p, 3);
+      el.textContent = Math.round(from + (to-from)*eased) + (suffix||'');
+      if(p < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  /* ---------------- toast + confetti ---------------- */
+  var toastTimer;
+  function toast(msg){
+    $('toastTxt').textContent = msg;
+    $('toast').classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function(){ $('toast').classList.remove('show'); }, 2600);
+  }
+  function confetti(){
+    if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var box = document.createElement('div');
+    box.className = 'confetti';
+    var cols = ['#ff9f2e','#12c47f','#e6c15a','#ffffff','#6ee7b7'];
+    for(var i=0;i<70;i++){
+      var p = document.createElement('i');
+      p.style.left = (Math.random()*100) + '%';
+      p.style.background = cols[i % cols.length];
+      p.style.animationDuration = (2.4 + Math.random()*2.4) + 's';
+      p.style.animationDelay = (Math.random()*0.9) + 's';
+      p.style.transform = 'rotate(' + Math.random()*360 + 'deg)';
+      box.appendChild(p);
+    }
+    document.body.appendChild(box);
+    setTimeout(function(){ box.remove(); }, 6200);
+  }
+
+  /* ---------------- map ---------------- */
+  function renderMap(){
+    $('hud-name').textContent = state.name || 'Guardian';
+    animateNumber($('hud-xp'), state.xp);
+    $('hud-done').textContent = state.completed.length;
+    $('hud-bar').style.width = (state.completed.length / MISSIONS.length * 100) + '%';
+
+    var grid = $('missionGrid');
+    grid.innerHTML = '';
+    MISSIONS.forEach(function(m, i){
+      var unlocked = m.id <= state.unlocked;
+      var done = state.completed.indexOf(m.id) !== -1;
+      var el = document.createElement('button');
+      el.className = 'mcard' + (unlocked ? '' : ' locked') + (done ? ' done' : '');
+      el.style.setProperty('--accent', THEMES[m.theme] || THEMES.saffron);
+      el.setAttribute('aria-label', t('mission') + ' ' + m.id + ': ' + L(m.title));
+      var status = done ? '<span class="mstatus ok"><span class="dot"></span>' + esc(t('completed')) + '</span>'
+                 : unlocked ? '<span class="mstatus open"><span class="dot"></span>' + esc(t('startMission')) + '</span>'
+                 : '<span class="mstatus"><span class="dot"></span>' + esc(t('locked')) + '</span>';
+      el.innerHTML =
+        '<div class="mtop">' +
+          '<span class="mnum">' + t('mission').toUpperCase() + ' ' + m.num + '</span>' +
+          '<span class="micon">' + (ICONS[m.id] || ICONS[1]) + '</span>' +
+        '</div>' +
+        '<h3>' + esc(L(m.title)) + '</h3>' +
+        '<div class="sub">' + esc(L(m.subtitle)) + '</div>' +
+        '<div class="art">' + esc(m.article) + '</div>' +
+        status;
+      if(unlocked){ el.addEventListener('click', function(){ openMission(i); }); }
+      else { el.addEventListener('click', function(){ toast(t('locked')); }); }
+      grid.appendChild(el);
+    });
+
+    var row = $('badgeRow');
+    row.innerHTML = '';
+    MISSIONS.forEach(function(m){
+      var on = state.badges.indexOf(m.id) !== -1;
+      var b = document.createElement('span');
+      b.className = 'badge' + (on ? ' on' : '');
+      b.textContent = (on ? '★ ' : '☆ ') + L(m.badge);
+      row.appendChild(b);
+    });
+    var fin = state.completed.length === MISSIONS.length;
+    var bf = document.createElement('span');
+    bf.className = 'badge' + (fin ? ' on' : '');
+    bf.textContent = (fin ? '★ ' : '☆ ') + L({en:'Guardian of the Constitution', hi:'संविधान का रक्षक', hinglish:'Guardian of the Constitution'});
+    row.appendChild(bf);
+  }
+
+  /* ---------------- mission ---------------- */
+  var curIdx = 0;
+  function openMission(i){
+    curIdx = i;
+    var m = MISSIONS[i];
+    $('m-head').style.setProperty('--accent', THEMES[m.theme] || THEMES.saffron);
+    $('m-tag').textContent = t('mission') + ' ' + m.num + ' / 05';
+    $('m-title').textContent = L(m.title);
+    $('m-art').textContent = L(m.subtitle) + '  ·  ' + m.article;
+    $('m-xp').textContent = state.xp;
+    renderMission(i);
+    show('screen-mission');
+  }
+  function renderMission(i){
+    var m = MISSIONS[i];
+    $('m-tag').textContent = t('mission') + ' ' + m.num + ' / 05';
+    $('m-title').textContent = L(m.title);
+    $('m-art').textContent = L(m.subtitle) + '  ·  ' + m.article;
+    $('m-brief').textContent = L(m.brief);
+    $('m-question').textContent = L(m.question);
+    $('m-scenario-lbl').textContent = t('scenario');
+    $('m-xp').textContent = state.xp;
+
+    var box = $('m-choices');
+    box.innerHTML = '';
+    var keys = ['A','B','C'];
+    m.choices.forEach(function(c, ci){
+      var b = document.createElement('button');
+      b.className = 'choice';
+      b.innerHTML = '<span class="key">' + keys[ci] + '</span><span>' + esc(L(c.text)) + '</span>';
+      b.addEventListener('click', function(){ pick(i, ci); });
+      box.appendChild(b);
+    });
+    $('m-feedback').innerHTML = '';
+    resetMentorGreeting();
+  }
+
+  function pick(i, ci){
+    var m = MISSIONS[i];
+    var chosen = m.choices[ci];
+    var buttons = $('m-choices').querySelectorAll('.choice');
+    buttons.forEach(function(b, bi){
+      b.disabled = true;
+      if(bi === ci) b.classList.add(chosen.correct ? 'correct' : 'wrong');
+      else if(!m.choices[bi].correct) b.classList.add('dim');
+    });
+
+    state.attempts[i] = (state.attempts[i] || 0) + 1;
+    var firstTry = state.attempts[i] === 1;
+    var already = state.completed.indexOf(m.id) !== -1;
+    var gained = 0;
+
+    if(chosen.correct){
+      if(!already){
+        gained = firstTry ? 150 : 70;
+        state.xp += gained;
+        state.completed.push(m.id);
+        if(state.badges.indexOf(m.id) === -1) state.badges.push(m.id);
+        state.unlocked = Math.max(state.unlocked, Math.min(m.id + 1, MISSIONS.length));
+      }
+      save();
+      $('m-xp').textContent = state.xp;
+    }
+
+    var fb = $('m-feedback');
+    var verdict = chosen.correct
+      ? '<div class="verdict good">' + tick() + '<span>' + esc(t('wellDone')) + '</span>' +
+          (gained ? '<span class="xpfly bump">+' + gained + ' ' + esc(t('xp')) + (firstTry && gained > 70 ? '  ·  ' + esc(t('perfect')) : '') + '</span>' : '') + '</div>'
+      : '<div class="verdict bad">' + cross() + '<span>' + esc(t('notQuite')) + '</span></div>';
+
+    fb.innerHTML =
+      '<div class="feedback">' + verdict +
+        '<div class="blocks">' +
+          '<div class="block"><h4>' + esc(t('yourCall')) + '</h4><p>' + esc(L(chosen.text)) + '</p></div>' +
+          '<div class="block gold"><h4>' + esc(t('whyThis')) + '</h4><p>' + esc(L(chosen.explain)) + '</p></div>' +
+          (chosen.correct ? (
+            '<div class="block"><h4>' + esc(t('thePrinciple')) + '</h4><p>' + esc(L(m.principle)) + '</p></div>' +
+            '<div class="block"><h4>' + esc(t('articleLabel')) + '</h4><div class="pillrow"><span class="pill">' + esc(m.article) + '</span></div></div>' +
+            '<div class="block"><h4>' + esc(t('goingDeeper')) + '</h4><p>' + esc(L(m.reasoning)) + '</p></div>' +
+            '<div class="block emerald"><h4>' + esc(t('inCourt')) + '</h4><p>' + esc(L(m.caseNote)) + '</p></div>' +
+            '<div class="block"><h4>' + esc(t('sources')) + '</h4><ul class="src">' + m.sources.map(function(s){ return '<li>' + esc(s) + '</li>'; }).join('') + '</ul></div>'
+          ) : '') +
+        '</div>' +
+        '<div class="actions">' +
+          (chosen.correct
+            ? (i < MISSIONS.length - 1
+                ? '<button class="btn emerald" id="nextBtn">' + esc(t('nextMission')) + ' →</button>'
+                : '<button class="btn emerald" id="finishBtn">' + esc(L({en:'Claim your certificate', hi:'अपना प्रमाणपत्र लें', hinglish:'Certificate lein'})) + ' →</button>') +
+              '<button class="btn ghost" id="mapBtn">' + esc(t('backToMap')) + '</button>'
+            : '<button class="btn ghost" id="retryBtn">' + esc(t('tryAgain')) + '</button>' +
+              '<button class="btn ghost" id="mapBtn">' + esc(t('backToMap')) + '</button>') +
+        '</div>' +
+      '</div>';
+
+    if(gained){ toast('+' + gained + ' ' + t('xp') + (firstTry && gained > 70 ? '  ·  ' + t('perfect') : '')); }
+    if(chosen.correct && state.completed.length === MISSIONS.length){ confetti(); }
+
+    var nb = $('nextBtn'); if(nb) nb.addEventListener('click', function(){ openMission(i+1); });
+    var fb2 = $('finishBtn'); if(fb2) fb2.addEventListener('click', function(){ renderVictory(); show('screen-victory'); confetti(); });
+    var rb = $('retryBtn'); if(rb) rb.addEventListener('click', function(){ renderMission(i); });
+    var mb = $('mapBtn'); if(mb) mb.addEventListener('click', function(){ renderMap(); show('screen-map'); });
+
+    if(chosen.correct){ fb.scrollIntoView({ behavior:'smooth', block:'nearest' }); }
+  }
+  function tick(){ return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7"/></svg>'; }
+  function cross(){ return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6 6 18"/></svg>'; }
+
+  /* ---------------- victory ---------------- */
+  function renderVictory(){
+    animateNumber($('v-xp'), state.xp);
+    $('v-rank').textContent = rankFor(state.xp);
+    $('c-name').textContent = state.name || 'Guardian';
+    $('c-rank').textContent = rankFor(state.xp);
+    $('c-score').textContent = state.xp;
+    var loc = state.lang === 'hi' ? 'hi-IN' : 'en-IN';
+    $('c-date').textContent = new Date().toLocaleDateString(loc, { day:'numeric', month:'long', year:'numeric' });
+
+    var row = $('v-badges');
+    row.innerHTML = '';
+    state.badges.forEach(function(id){
+      var m = MISSIONS.filter(function(x){ return x.id === id; })[0];
+      if(!m) return;
+      var b = document.createElement('span');
+      b.className = 'badge on';
+      b.textContent = '★ ' + L(m.badge);
+      row.appendChild(b);
+    });
+  }
+
+  /* ---------------- mentor ---------------- */
+  var mentorBooted = false;
+  function resetMentorGreeting(){
+    $('mlog').innerHTML = '';
+    addMsg('bot', t('mentorGreeting'));
+    mentorBooted = true;
+  }
+  function addMsg(who, text){
+    var d = document.createElement('div');
+    d.className = 'msg ' + (who === 'me' ? 'me' : 'bot');
+    d.textContent = text;
+    $('mlog').appendChild(d);
+    $('mlog').scrollTop = $('mlog').scrollHeight;
+  }
+  function mentorAnswer(q){
+    var s = q.toLowerCase();
+    for(var i=0;i<MENTOR_KB.length;i++){
+      var e = MENTOR_KB[i];
+      for(var k=0;k<e.keys.length;k++){
+        if(s.indexOf(e.keys[k]) !== -1) return L(e.a);
+      }
+    }
+    return t('mentorUnknown');
+  }
+  async function askMentor(){
+    var inp = $('minput');
+    var q = inp.value.trim();
+    if(!q) return;
+    addMsg('me', q);
+    inp.value = '';
+    var proxy = window.SAMVIDHAN_MENTOR_PROXY;
+    if(proxy){
+      try{
+        var res = await fetch(proxy, {
+          method:'POST',
+          headers:{ 'Content-Type':'application/json' },
+          body: JSON.stringify({ question:q, language:state.lang, mission:MISSIONS[curIdx].id })
+        });
+        var data = await res.json();
+        if(data && data.answer){ addMsg('bot', data.answer); return; }
+      }catch(e){ /* fall through to offline knowledge base */ }
+    }
+    setTimeout(function(){ addMsg('bot', mentorAnswer(q)); }, 220);
+  }
+
+  /* ---------------- boot ---------------- */
+  function boot(){
+    var saved = load();
+    if(saved){
+      state = Object.assign(state, saved);
+      if(state.lang !== 'en' && state.lang !== 'hi' && state.lang !== 'hinglish') state.lang = 'en';
+      if(!state.unlocked) state.unlocked = 1;
+    }
+    $('nameInput').value = state.name || '';
+    applyLang();
+    renderMap();
+
+    if(state.completed.length === MISSIONS.length){ /* player may revisit the certificate from the map */ }
+
+    document.querySelectorAll('#langrow .langchip').forEach(function(b){
+      b.addEventListener('click', function(){ state.lang = b.dataset.lang; save(); applyLang(); });
+    });
+    document.querySelectorAll('#minilang button').forEach(function(b){
+      b.addEventListener('click', function(){ state.lang = b.dataset.lang; save(); applyLang(); });
+    });
+    $('startBtn').addEventListener('click', function(){
+      var n = $('nameInput').value.trim();
+      if(n) state.name = n;
+      save(); applyLang(); renderMap(); show('screen-map');
+      toast(L({en:'Welcome, ' + (state.name||'Guardian') + '!', hi:'स्वागत है, ' + (state.name||'रक्षक') + '!', hinglish:'Welcome, ' + (state.name||'Guardian') + '!'}));
+    });
+    $('nameInput').addEventListener('keydown', function(e){ if(e.key === 'Enter') $('startBtn').click(); });
+    $('backBtn').addEventListener('click', function(){ renderMap(); show('screen-map'); });
+    $('msend').addEventListener('click', askMentor);
+    $('minput').addEventListener('keydown', function(e){ if(e.key === 'Enter') askMentor(); });
+    $('mentorBox').addEventListener('toggle', function(){ if($('mentorBox').open && !mentorBooted) resetMentorGreeting(); });
+    $('printBtn').addEventListener('click', function(){ window.print(); });
+    $('againBtn').addEventListener('click', function(){ show('screen-landing'); });
+    $('resetBtn').addEventListener('click', function(){
+      if(!confirm('Reset all progress?')) return;
+      state = { name:state.name, lang:state.lang, xp:0, completed:[], badges:[], attempts:{}, unlocked:1 };
+      save(); renderMap(); toast('Progress reset');
+    });
+  }
+
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+  else boot();
+})();
+</script>
+</body>
+</html>
